@@ -50,5 +50,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Mac files
+.DS_Store
+
 # Ignore Program
 minishell

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/04/12 10:39:37 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/04/21 16:34:39 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 
 # include "ft_printf.h"
 # include "libft.h"
-
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 // -------------------------------- MACROS ---------------------------------- //
 
 // ------------------------------- STRUCTS ---------------------------------- //

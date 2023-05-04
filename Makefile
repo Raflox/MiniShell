@@ -9,7 +9,7 @@ NAME = minishell
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -lreadline
 
 RM = @rm -rf
 

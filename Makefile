@@ -17,7 +17,7 @@ RM = @rm -rf
 LIBFT_A=lib/libft/libft.a
 
 #Source files
-SRC=src/main.c
+SRC=src/main.c src/handle_quotes.c
 OBJ=$(SRC:%.c=%.o)
 
 #Phony targets

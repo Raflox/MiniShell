@@ -9,18 +9,12 @@ NAME = minishell
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -lreadline
+CFLAGS = -Wall -Wextra -Werror
 
 RM = @rm -rf
 
-#Library directories
-ARM=lib/arm/libftprintf.a \
-	lib/arm/libft.a
-AMD=lib/amd/libftprintf.a \
-	lib/amd/libft.a
-
-#ShellCommands
-UNAME_P=$(shell uname -p)
+#lib
+LIBFT_A=lib/libft/libft.a
 
 #Source files
 SRC=src/main.c
@@ -31,25 +25,23 @@ OBJ=$(SRC:%.c=%.o)
 
 all: $(NAME)
 $(NAME): $(OBJ)
-ifeq ($(UNAME_P),x86_64)
-	$(CC) $(CFLAGS) $(SRC) $(AMD) -o $(NAME)
-else
-	$(CC) $(CFLAGS) $(SRC) $(ARM) -o $(NAME)
-endif
-	@echo "$(COLOUR_GREEN)Compiled$(COLOUR_END)"
+	@make -C lib/libft/
+	$(CC) $(CFLAGS) $(SRC) $(LIBFT_A) -o $(NAME)
+	@echo "$(COLOUR_GREEN)Program Compiled: Success$(COLOUR_END)"
 
 sanitize:
-	$(CC) $(SRC) lib/libftprintf.a -fsanitize=address -g -o $(NAME)
+	$(CC) $(SRC) $(LIBFT_A) -fsanitize=address -g -pthread -o $(NAME)
 	@echo "$(COLOUR_GREEN)Make Sanitize Done$(COLOUR_END)"
+	make run
 
 clean:
+	@make clean -C lib/libft/
 	$(RM) $(OBJ)
 	@echo "$(COLOUR_GREEN)$(OBJ) Removed$(COLOUR_END)"
 
 fclean: clean
+	@make fclean -C lib/libft/
 	$(RM) $(NAME)
 	@echo "$(COLOUR_GREEN)$(NAME) removed$(COLOUR_END)"
 
-run:
-	make sanita && ./$(NAME) infile "grep ola" "wc -l" outfile
-make re: fclean all
+re: fclean all

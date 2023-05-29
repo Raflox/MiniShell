@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 17:22:11 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/27 22:48:02 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/29 15:05:07 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ char	*single_quotes(char *str)
 }
 
 /*
-This function takes a str and creates a new string with no double quotes;
-The return value should be treated variables or commands;
+This function takes a str and creates a new string with no double quotes;The return value should be treated variables or commands;
 Double quote with double quotes (all disapear), but not with single quotes;
 Both single and double quotes allow escaping characters,
 using a backslash () to treat them literally;
@@ -57,4 +56,5 @@ char	*handle_quotes(char *str)
 		return (single_quotes(str));
 	else if (str[i] == 34 && (str[len]) == 34)
 		return (double_quotes(str));
+	return ("teste");
 }

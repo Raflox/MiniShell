@@ -1,8 +1,9 @@
 #Colors
-COLOUR_GREEN=\033[0;32m
-COLOUR_RED=\033[0;31m
-COLOUR_BLUE=\033[0;34m
-COLOUR_END=\033[0m
+BLACK		=	\033[0;30m
+RED			=	\033[0;31m
+GREEN		=	\033[0;32m
+YELLOW		=	\033[0;33m
+COLOUR_END	=	\033[0m
 
 #Targets
 NAME = minishell
@@ -13,35 +14,43 @@ CFLAGS = -Wall -Wextra -Werror
 
 RM = @rm -rf
 
-#lib
-LIBFT_A=lib/libft/libft.a
+#libft
+LIBFT_DIR	=	lib/libft/
+LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC=src/main.c
-OBJ=$(SRC:%.c=%.o)
+SRC			=	src/main.c
 
-#Phony targets
-.PHONY: all clean fclean re
+#Object files
+OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
+OBJ_DIR		=	obj
 
 all: $(NAME)
-$(NAME): $(OBJ)
-	@make -C lib/libft/
-	$(CC) $(CFLAGS) $(SRC) $(LIBFT_A) -o $(NAME)
-	@echo "$(COLOUR_GREEN)Program Compiled: Success$(COLOUR_END)"
 
-sanitize:
-	$(CC) $(SRC) $(LIBFT_A) -fsanitize=address -g -pthread -o $(NAME)
-	@echo "$(COLOUR_GREEN)Make Sanitize Done$(COLOUR_END)"
-	make run
+$(NAME):	$(OBJ) | $(OBJ_DIR)
+	@echo "$(BLACK)Compiling libft...$(COLOUR_END)"
+	@make --silent -C $(LIBFT_DIR)
+	@echo "$(GREEN)libft successfully compiled.$(COLOUR_END)"
+	@echo "$(BLACK)Compiling $(NAME)...$(COLOUR_END)"
+	@$(CC) $(CFLAGS) -o $(@) -lreadline $(^) $(LIBFT_A)
+	@echo "$(GREEN)$(NAME) successfully compiled.$(COLOUR_END)"
+
+$(OBJ_DIR)/%.o:	src/%.c | $(OBJ_DIR)
+	@$(CC) $(CFLAGS) -c $(^) -o $(@)
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@make clean -C lib/libft/
-	$(RM) $(OBJ)
-	@echo "$(COLOUR_GREEN)$(OBJ) Removed$(COLOUR_END)"
+	@rm -rf $(OBJ_DIR)
+	@make clean --silent -C $(LIBFT_DIR)
+	@echo "$(YELLOW)All Objects removed.$(COLOUR_END)"
 
 fclean: clean
-	@make fclean -C lib/libft/
-	$(RM) $(NAME)
-	@echo "$(COLOUR_GREEN)$(NAME) removed$(COLOUR_END)"
+	@rm -rf $(NAME)
+	@make fclean --silent -C $(LIBFT_DIR)
+	@echo "$(YELLOW)$(NAME) removed.$(COLOUR_END)"
 
 re: fclean all
+
+.PHONY: all clean fclean re bonus

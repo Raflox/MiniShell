@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/11 18:12:21 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/10 23:29:10 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef PARSING_H
+# define PARSING_H
 
 // ------------------------------- INCLUDES --------------------------------- //
-
-# include "../lib/libft/include/libft.h"
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-//minishell libs
-# include "parsing.h"
-# include "utils.h"
-# include "lexer.h"
 
 // -------------------------------- MACROS ---------------------------------- //
 
@@ -30,6 +21,6 @@
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 
-char	*handle_quotes(char *str);
+void	parsing(char *str);
 
 #endif

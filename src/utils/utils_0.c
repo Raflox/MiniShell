@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils_0.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/11 18:16:16 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/12 10:40:32 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-int	main(int ac, char **av, char **envp)
+int	ft_is_space(char c)
 {
-	char	*sh_line;
+	if (c == '\t' || c == ' ')
+		return (1);
+	return (0);
+}
 
-	(void)ac;
-	(void)av;
-	(void)envp;
-	while (1)
-	{
-		sh_line = readline("minishel: ");
-		lexer(sh_line);
-	}
-	(void)sh_line;
+int	ft_is_token(char c)
+{
+	if (c == PIPE || c == GREAT || c == LESS)
+		return (1);
 	return (0);
 }

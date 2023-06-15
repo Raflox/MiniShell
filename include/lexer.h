@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/11 18:12:21 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/11 18:08:35 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/11 18:36:14 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef LEXER_H
+# define LEXER_H
 
 // ------------------------------- INCLUDES --------------------------------- //
 
-# include "../lib/libft/include/libft.h"
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-//minishell libs
-# include "parsing.h"
-# include "utils.h"
-# include "lexer.h"
+// -------------------------------- ENUMS ----------------------------------- //
+
+typedef enum e_tokens
+{
+	PIPE = 124,
+	GREAT = 62,
+	LESS = 60
+}t_tokens;
 
 // -------------------------------- MACROS ---------------------------------- //
 
@@ -30,6 +30,6 @@
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 
-char	*handle_quotes(char *str);
+void	lexer(char *str);
 
 #endif

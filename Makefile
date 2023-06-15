@@ -19,10 +19,10 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/main.c
+SRC			=	src/main.c src/lexer/lexer.c src/utils/utils_0.c
 
 #Object files
-OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
+OBJ			=	$(SRC:src/*/%.c=$(OBJ_DIR)/%.o)
 OBJ_DIR		=	obj
 
 all: $(NAME)
@@ -40,6 +40,7 @@ $(OBJ_DIR)/%.o:	src/%.c | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR)
 
 clean:
 	@rm -rf $(OBJ_DIR)

@@ -1,0 +1,72 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parseSegments.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/28 16:00:07 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/28 16:18:57 by rgomes-c         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../include/minishell.h"
+
+void	parse_segment_cmd(char **str)
+{
+	int		i;
+	char	*new_str;
+
+	i = 0;
+	new_str = NULL;
+	if (!(*str))
+		return ;
+	while ((*str)[i])
+		parse_segment_conditions(*str, &new_str, &i);
+	free(*str);
+	*str = new_str;
+}
+
+void	parse_segment_red(char **str)
+{
+	int		i;
+	char	*new_str;
+
+	i = 0;
+	new_str = NULL;
+	if (!(*str))
+		return ;
+	if ((*str)[i] == (*str)[i + 1])
+		add_c_to_string(&new_str, (*str)[i++]);
+	add_c_to_string(&new_str, (*str)[i++]);
+	while (is_space((*str)[i]))
+		i++;
+	if ((*str)[i] == '\0')
+		exit_program("sh: Syntax error: newline unexpected", 0);
+	else if (is_greatorless((*str)[i]))
+		exit_program("sh: Syntax error: redirection unexpected", 0);
+	while ((*str)[i])
+		parse_segment_conditions(*str, &new_str, &i);
+	free(*str);
+	*str = new_str;
+}
+
+void	parse_segments(t_list *lst)
+{
+	t_list	*temp;
+	t_seg	*seg;
+	int		i;
+
+	temp = lst;
+	while (temp)
+	{
+		seg = (t_seg *)temp->content;
+		i = -1;
+		while (seg->cmd && seg->cmd[++i])
+			parse_segment_cmd(&seg->cmd[i]);
+		i = -1;
+		while (seg->red && seg->red[++i])
+			parse_segment_red(&seg->red[i]);
+		temp = temp->next;
+	}
+}

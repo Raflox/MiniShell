@@ -6,21 +6,27 @@
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 15:31:30 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/28 17:08:44 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-//seg de segmento
-t_list	*lst(void)
-{
-	static t_list	lst;
+/*
+**	Function: get_segment_red
+**	---------------------------------
+**	This function gets a redirection.
+**	Then will be treated forward.
 
-	return (&lst);
-}
+**	Parameters:
+**		red_array:	pointer to the redirection array.
+		seg:		the segment string.
+		curr_pos:	current position of the segment string.
 
-void	new_redirection(char ***red_array, char *seg, int *curr_pos)
+**	Return:
+**		Non.
+*/
+void	get_segment_red(char ***red_array, char *seg, int *curr_pos)
 {
 	char	*str;
 	int		start;
@@ -49,19 +55,20 @@ void	new_redirection(char ***red_array, char *seg, int *curr_pos)
 }
 
 /*
-**	Function: get_command
+**	Function: get_segment_cmd
 **	---------------------------------
-**	This function get the command from the input only.
+**	This function gets a command.
 **	Then will be treated forward.
 
 **	Parameters:
-**		input:		input_piece.
-					current_position.
+**		cmd_array:	pointer to the redirection array.
+		seg:		the segment string.
+		curr_pos:	current position of the segment string.
 
 **	Return:
 **		Non.
 */
-void	new_command(char ***cmd_array, char *seg, int *curr_pos)
+void	get_segment_cmd(char ***cmd_array, char *seg, int *curr_pos)
 {
 	char	*str;
 	int		start;
@@ -88,7 +95,20 @@ void	new_command(char ***cmd_array, char *seg, int *curr_pos)
 	free(str);
 }
 
-t_list	*new_segment(char *input_seg)
+/*
+**	Function: get_segment_red
+**	---------------------------------
+**	This function gets the segment of the input string.
+**	Then creates a new list with the content
+**	needed to be trated after like the command array and the redirection array.
+
+**	Parameters:
+**		input_segment:	array.
+
+**	Return:
+**		t_list with a struct content.
+*/
+t_list	*get_segment(char *input_seg)
 {
 	t_seg	*new_seg;
 	int		i;
@@ -104,12 +124,24 @@ t_list	*new_segment(char *input_seg)
 		if (is_space(input_seg[i]))
 			i++;
 		else if (is_greatorless(input_seg[i]))
-			new_redirection(&new_seg->red, input_seg, &i);
+			get_segment_red(&new_seg->red, input_seg, &i);
 		else
-			new_command(&new_seg->cmd, input_seg, &i);
+			get_segment_cmd(&new_seg->cmd, input_seg, &i);
 	}
 	return (ft_lstnew(new_seg));
 }
+
+/*
+**	Function: parse
+**	---------------------------------
+**	This function parse the input line;
+
+**	Parameters:
+**		input:	input string from readline.
+
+**	Return:
+**		Non.
+*/
 
 void	parse(char *input)
 {
@@ -121,7 +153,7 @@ void	parse(char *input)
 	head = NULL;
 	i = -1;
 	while (parse_input[++i])
-		ft_lstadd_back(&head, new_segment(parse_input[i]));
+		ft_lstadd_back(&head, get_segment(parse_input[i]));
 	parse_segments(head);
-	print_lst(head);
+	shell()->segment_lst = head;
 }

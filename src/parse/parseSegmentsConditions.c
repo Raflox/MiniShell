@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_segments.c                                   :+:      :+:    :+:   */
+/*   parse_segments_1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 15:11:12 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/28 16:01:09 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,88 +74,18 @@ static int	skip_quote(char *str, char **new_str, char quote, int *curr_pos)
 	return (1);
 }
 
-static void	parse_segment_cmd(char **str)
+void	parse_segment_conditions(char *str, char **new_str, int *curr_pos)
 {
-	int		i;
-	char	*new_str;
-
-	i = 0;
-	new_str = NULL;
-	if (!(*str))
-		return ;
-	while ((*str)[i])
+	if (is_quote(str[*curr_pos]))
 	{
-		if (is_quote((*str)[i]))
-		{
-			if (!skip_quote(*str, &new_str, (*str)[i], &i))
-				exit_program("bateu nas quotes", 0);
-		}
-		else if ((*str)[i] == '$')
-		{
-			if (!expand_variable(*str, &new_str, &i))
-				exit_program("bateu na expand variable", 0);
-		}
-		else
-		{
-			add_c_to_string(&new_str, (*str)[i]);
-			i++;
-		}
+		if (!skip_quote(str, new_str, str[*curr_pos], curr_pos))
+			exit_program("bateu nas quotes", 0);
 	}
-	free(*str);
-	*str = new_str;
-}
-
-static void	parse_segment_red(char **str)
-{
-	int		i;
-	char	*new_str;
-
-	i = 0;
-	new_str = NULL;
-	if (!(*str))
-		return ;
-	if ((*str)[i] == (*str)[i + 1])
-		add_c_to_string(&new_str, (*str)[i++]);
-	add_c_to_string(&new_str, (*str)[i++]);
-	while (is_space((*str)[i]))
-		i++;
-	if (is_greatorless((*str)[i]))
-		exit_program("novamente sintax error", 0);
-	while ((*str)[i])
+	else if (str[*curr_pos] == '$')
 	{
-		if (is_quote((*str)[i]))
-		{
-			if (!skip_quote(*str, &new_str, (*str)[i], &i))
-				exit_program("bateu nas quotes", 0);
-		}
-		else if ((*str)[i] == '$')
-		{
-			if (!expand_variable(*str, &new_str, &i))
-				exit_program("bateu na expand variable", 0);
-		}
-		else
-			add_c_to_string(&new_str, (*str)[i++]);
+		if (!expand_variable(str, new_str, curr_pos))
+			exit_program("bateu na expand variable", 0);
 	}
-	free(*str);
-	*str = new_str;
-}
-
-void	parse_segments(t_list *lst)
-{
-	t_list	*temp;
-	t_seg	*seg;
-	int		i;
-
-	temp = lst;
-	while (temp)
-	{
-		seg = (t_seg *)temp->content;
-		i = -1;
-		while (seg->cmd && seg->cmd[++i])
-			parse_segment_cmd(&seg->cmd[i]);
-		i = -1;
-		while (seg->red && seg->red[++i])
-			parse_segment_red(&seg->red[i]);
-		temp = temp->next;
-	}
+	else
+		add_c_to_string(new_str, str[(*curr_pos)++]);
 }

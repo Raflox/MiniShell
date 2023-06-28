@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/19 19:50:21 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/28 17:26:07 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,25 @@
 
 // ------------------------------- STRUCTS ---------------------------------- //
 
+typedef struct s_sh		t_sh;
+typedef struct s_var	t_var;
+
+struct s_sh
+{
+	bool	prompt;
+	t_var	*vars;
+	t_list	*segment_lst;
+};
+
+struct s_var
+{
+	char	**env;
+	char	**new_vars;
+};
+
+
 // -----------------------------  FUNCTIONS --------------------------------- //
+
+t_sh	*shell(void);
 
 #endif

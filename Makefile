@@ -19,8 +19,10 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/parse/exit_utils.c  src/parse/parse.c           src/parse/str_utils.c    src/utils/utils0.c \
-src/parse/is_utils.c    src/parse/parse_segments.c  src/utils/debug_utils.c
+SRC			=	src/main.c \
+				src/parse/parse.c                    src/parse/utils_exit.c  src/utils/debug_utils.c \
+				src/parse/parseSegments.c            src/parse/utils_is.c    src/utils/utils0.c \
+				src/parse/parseSegmentsConditions.c  src/parse/utils_str.c
 
 #Object files
 OBJ			=	$(SRC:src/*/%.c=$(OBJ_DIR)/%.o)

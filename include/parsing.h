@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/26 22:53:44 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/28 14:50:51 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,16 @@ int		is_greatorless(char c);
 char	*find_and_replace(char *str, char *find_set, char replace_char);
 char	**split_and_trim(char *str, char c);
 void	add_str_to_array(char ***array, char *str);
+void	add_c_to_string(char **str, char c);
 
+//debug_utils.c
+void	print_lst(t_list *lst);
+
+//parse_segments.c
+void	parse_segments(t_list *lst);
+
+//exit_utils.c
+void	exit_program(char *error, int code);
 
 
 #endif

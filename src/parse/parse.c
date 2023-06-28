@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 09:39:12 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/28 15:31:30 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,77 +20,6 @@ t_list	*lst(void)
 	return (&lst);
 }
 
-void	exit_program(char *error, int code)
-{
-	(void)code;
-	printf("Error: %s\n", error);
-	//exit(code);
-}
-
-/*
-**	Function: expand_variable
-**	---------------------------------
-**	This function expand the variables if it possible to expand.
-
-**	Parameters:
-**		input:		input string.
-**		curr_pos:	current position on string.
-
-**	Return:
-**		Non.
-*/
-// void	expand_variable(char *input_piece, char **new_piece, int *curr_pos)
-// {
-// 	int	start;
-
-// 	if (input_piece[*curr_pos + 1] == '?')
-// 		return ;
-// 	if (input_piece[*curr_pos + 1] == ' ')
-// 		return ;
-// 	(*curr_pos)++;
-// 	start = *curr_pos;
-// 	while (input_piece[*curr_pos] && input_piece[*curr_pos] != ' '
-// 		&& !is_quote(input_piece[*curr_pos]))
-// 		(*curr_pos)++;
-// 	if (start != *curr_pos)
-// 		add_char_to_string(new_piece, '\\');
-// 	else
-// 		exit_program("error expanding variable", 0);
-// }
-
-/*
-**	Function: skip_quote
-**	---------------------------------
-**	This function skip all the quoted content and
-**	give an error when quotes arent closed
-
-**	Parameters:
-**		input:		input string.
-**		quote:		char ' or " that was is that position.
-**		curr_pos:	current position on string.
-
-**	Return:
-**		Non.
-*/
-// void	skip_quote(char *input_piece, char **new_piece,
-// 	char quote, int *curr_pos)
-// {
-// 	while (input_piece[++(*curr_pos)])
-// 	{
-// 		if (quote == '\"' && input_piece[*curr_pos] == '$')
-// 			expand_variable(input_piece, new_piece, curr_pos);
-// 		if (input_piece[*curr_pos] == quote)
-// 		{
-// 			(*curr_pos)++;
-// 			return ;
-// 		}
-// 		if (input_piece[*curr_pos + 1] == '\0')
-// 			exit_program("aquasdi nas quotes", 0);
-// 		else
-// 			add_char_to_string(new_piece, input_piece[*curr_pos]);
-// 	}
-// }
-
 void	new_redirection(char ***red_array, char *seg, int *curr_pos)
 {
 	char	*str;
@@ -100,7 +29,8 @@ void	new_redirection(char ***red_array, char *seg, int *curr_pos)
 	start = *curr_pos;
 	while (is_greatorless(seg[*curr_pos]) || is_space(seg[*curr_pos]))
 		(*curr_pos)++;
-	while (!is_greatorless(seg[*curr_pos]) && !is_space(seg[*curr_pos]) && seg[*curr_pos])
+	while (!is_greatorless(seg[*curr_pos])
+		&& !is_space(seg[*curr_pos]) && seg[*curr_pos])
 	{
 		if (is_quote(seg[*curr_pos]))
 		{
@@ -139,7 +69,8 @@ void	new_command(char ***cmd_array, char *seg, int *curr_pos)
 
 	start = *curr_pos;
 	quote = 0;
-	while (!is_greatorless(seg[*curr_pos]) && !is_space(seg[*curr_pos]) && seg[*curr_pos])
+	while (!is_greatorless(seg[*curr_pos])
+		&& !is_space(seg[*curr_pos]) && seg[*curr_pos])
 	{
 		if (is_quote(seg[*curr_pos]))
 		{
@@ -180,26 +111,6 @@ t_list	*new_segment(char *input_seg)
 	return (ft_lstnew(new_seg));
 }
 
-void	print_lst(t_list *lst)
-{
-	t_list	*temp;
-	t_seg	*seg;
-	int		i;
-
-	temp = lst;
-	while (temp)
-	{
-		seg = (t_seg *)temp->content;
-		i = -1;
-		while (seg->cmd && seg->cmd[++i])
-			printf("arg[%d] - %s\n", i, seg->cmd[i]);
-		i = -1;
-		while (seg->red && seg->red[++i])
-			printf("arg[%d] - %s\n", i, seg->red[i]);
-		temp = temp->next;
-	}
-}
-
 void	parse(char *input)
 {
 	t_list	*head;
@@ -211,5 +122,6 @@ void	parse(char *input)
 	i = -1;
 	while (parse_input[++i])
 		ft_lstadd_back(&head, new_segment(parse_input[i]));
+	parse_segments(head);
 	print_lst(head);
 }

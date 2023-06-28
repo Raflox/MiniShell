@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 15:11:22 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/26 22:53:31 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/28 15:10:23 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,36 @@ static char	**create_array(char *str)
 		return (NULL);
 	array[1] = NULL;
 	return (array);
+}
+
+void	add_c_to_string(char **str, char c)
+{
+	char	*new_str;
+	int		i;
+
+	if (!(*str))
+	{
+		new_str = malloc(2);
+		if (!new_str)
+			return ;
+		new_str[0] = c;
+		new_str[1] = '\0';
+		*str = new_str;
+		return ;
+	}
+	i = 0;
+	while ((*str)[i])
+		i++;
+	new_str = malloc(i + 2);
+	if (!new_str)
+		return ;
+	i = -1;
+	while ((*str)[++i])
+		new_str[i] = (*str)[i];
+	new_str[i] = c;
+	new_str[i + 1] = '\0';
+	free(*str);
+	*str = new_str;
 }
 
 void	add_str_to_array(char ***array, char *str)

@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils0.c                                           :+:      :+:    :+:   */
+/*   debug_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 14:48:24 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/28 14:39:41 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/28 14:41:13 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
-	This function frees the array if it exists
-*/
-void	free_array(char ***array)
+void	print_lst(t_list *lst)
 {
-	int		len;
+	t_list	*temp;
+	t_seg	*seg;
 	int		i;
 
-	if (!(*array))
-		return ;
-	len = 0;
-	while ((*array)[len])
-		len++;
-	i = -1;
-	while (++i < len)
-		free((*array)[i]);
-	free(*array);
+	temp = lst;
+	while (temp)
+	{
+		seg = (t_seg *)temp->content;
+		i = -1;
+		while (seg->cmd && seg->cmd[++i])
+			printf("arg[%d] - %s\n", i, seg->cmd[i]);
+		i = -1;
+		while (seg->red && seg->red[++i])
+			printf("arg[%d] - %s\n", i, seg->red[i]);
+		temp = temp->next;
+	}
 }

@@ -19,7 +19,8 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/main.c src/lexer/lexer.c src/utils/utils0.c src/utils/utils1.c
+SRC			=	src/parse/exit_utils.c  src/parse/parse.c           src/parse/str_utils.c    src/utils/utils0.c \
+src/parse/is_utils.c    src/parse/parse_segments.c  src/utils/debug_utils.c
 
 #Object files
 OBJ			=	$(SRC:src/*/%.c=$(OBJ_DIR)/%.o)

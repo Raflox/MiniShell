@@ -1,32 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils0.c                                           :+:      :+:    :+:   */
+/*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 14:48:24 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/28 14:49:20 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/28 14:50:31 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
-	This function frees the array if it exists
-*/
-void	free_array(char ***array)
+void	exit_program(char *error, int code)
 {
-	int		len;
-	int		i;
-
-	if (!(*array))
-		return ;
-	len = 0;
-	while ((*array)[len])
-		len++;
-	i = -1;
-	while (++i < len)
-		free((*array)[i]);
-	free(*array);
+	(void)code;
+	printf("Error: %s\n", error);
+	//exit(code);
 }

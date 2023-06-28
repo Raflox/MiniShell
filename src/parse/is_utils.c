@@ -6,27 +6,36 @@
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 14:48:24 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/28 14:48:09 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
-	This function frees the array if it exists
-*/
-void	free_array(char ***array)
+int	is_space(char c)
 {
-	int		len;
-	int		i;
+	if (c == '\t' || c == ' ')
+		return (1);
+	return (0);
+}
 
-	if (!(*array))
-		return ;
-	len = 0;
-	while ((*array)[len])
-		len++;
-	i = -1;
-	while (++i < len)
-		free((*array)[i]);
-	free(*array);
+int	is_greatorless(char c)
+{
+	if (c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
+int	is_token(char c)
+{
+	if (c == '|' || c == '<' || c == '>' || c == '&')
+		return (1);
+	return (0);
+}
+
+int	is_quote(char c)
+{
+	if (c == '"' || c == '\'')
+		return (1);
+	return (0);
 }

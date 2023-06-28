@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:08:35 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/11 18:36:14 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:08:35 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
 
 typedef enum e_tokens
 {
-	PIPE = 124,
-	GREAT = 62,
-	LESS = 60
+	PIPE,
+	GREAT_GREAT,
+	LESS_LESS,
+	GREAT,
+	LESS
 }t_tokens;
 
 // -------------------------------- MACROS ---------------------------------- //

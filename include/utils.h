@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:02:46 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/11 18:36:18 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/16 14:47:32 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,12 @@
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 
-int	ft_is_space(char c);
-int	ft_is_token(char c);
+//utils_0.c
+int		ft_is_space(char c);
+int		ft_is_token(char c);
+void	free_array(char ***array);
+
+//utils_1.c
+char	**ft_split_set(char const *s, char *set);
 
 #endif

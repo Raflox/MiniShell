@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/11 18:12:21 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/19 19:50:21 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+// boolean lib
+# include <stdbool.h>
 //minishell libs
 # include "parsing.h"
 # include "utils.h"
@@ -29,7 +31,5 @@
 // ------------------------------- STRUCTS ---------------------------------- //
 
 // -----------------------------  FUNCTIONS --------------------------------- //
-
-char	*handle_quotes(char *str);
 
 #endif

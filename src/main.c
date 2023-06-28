@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/11 18:16:16 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:27:09 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		sh_line = readline("minishel: ");
-		lexer(sh_line);
+		parse(sh_line);
 	}
 	(void)sh_line;
 	return (0);

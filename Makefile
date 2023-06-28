@@ -10,7 +10,7 @@ NAME = minishell
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
 RM = @rm -rf
 
@@ -19,7 +19,7 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/main.c src/lexer/lexer.c src/utils/utils_0.c
+SRC			=	src/main.c src/lexer/lexer.c src/utils/utils0.c src/utils/utils1.c
 
 #Object files
 OBJ			=	$(SRC:src/*/%.c=$(OBJ_DIR)/%.o)

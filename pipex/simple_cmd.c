@@ -6,11 +6,13 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/04 18:29:55 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/04 21:16:51 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+//TODO: Create function to get last outfile from matrix.
 
 typedef struct s_cmd
 {
@@ -38,6 +40,7 @@ void	simple_cmd(t_cmd cmd_struct)
 	int		in_fd;
 	int		out_fd;
 	char	*cmd;
+	int		pid;
 
 /* 	if (ac == 2)
 		execute(av[1], env); */
@@ -51,15 +54,19 @@ void	simple_cmd(t_cmd cmd_struct)
 		out_fd = file_ctl(cmd_struct.outfile, OUTFILE);
 		dup2(out_fd, STDOUT_FILENO);
 	}
-	execute(cmd_struct.cmd, cmd_struct.env);
+	pid = fork();
+	if (pid == 0)
+		execute(cmd_struct.cmd, cmd_struct.env);
+	close(in_fd);
+	close(out_fd);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_cmd	cmd_struct;
 
-	cmd_struct.cmd = "grep OBJS";
-	cmd_struct.infile = "Makefile";
+	cmd_struct.cmd = "grep rafael";
+	cmd_struct.infile = "test.txt";
 	cmd_struct.outfile = "outfile";
 	cmd_struct.env = env;
 

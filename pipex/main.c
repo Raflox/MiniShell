@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:16 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/04 14:11:30 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/04 18:13:12 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int main(int ac, char **av, char **env)
 	int	i;
 
 	i = 3;
+	if (ac == 2)
+		execute(av[1], env);
 	if (ac >= 4)
 	{
 		fd[0] = file_ctl(av[1], INFILE); // Open input file.

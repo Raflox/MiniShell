@@ -1,3 +1,0 @@
-INFOPATH=/opt/homebrew/share/info:/opt/homebrew/share/info:
-MANPATH=/opt/local/share/man:/opt/homebrew/share/man:/usr/share/man:/usr/local/share/man:/opt/local/share/man:/opt/homebrew/share/man::
-PATH=/opt/local/bin:/opt/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion Tech Preview.app/Contents/Public:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/local/bin:/opt/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/rs/.fig/bin:/Users/rs/.local/bin

@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:16 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/08/29 23:33:46 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/04 14:11:30 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 // TODO: ADD APPEND PERMISSION FOR >>
 // TODO: Adapt to work without first infile
+// TODO: Close files!!!
 
 void	process_ctl(char *cmd, char **env, int flag)
 {

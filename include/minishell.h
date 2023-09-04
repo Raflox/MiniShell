@@ -36,6 +36,7 @@ typedef struct s_var	t_var;
 struct s_sh
 {
 	bool	prompt;
+	bool	error;
 	t_var	*vars;
 	t_list	*segment_lst;
 };

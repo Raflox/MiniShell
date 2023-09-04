@@ -32,10 +32,6 @@ int	main(int ac, char **av, char **envp)
 	{
 		sh_line = readline("minishel: ");
 		parse(sh_line);
-		if (shell()->prompt)
-			printf("ta ok");
-		else
-			printf("nok");
 	}
 	(void)sh_line;
 	return (0);

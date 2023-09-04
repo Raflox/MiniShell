@@ -23,8 +23,12 @@ typedef struct s_seg	t_seg;
 
 struct s_seg
 {
-	char			**cmd;
-	char			**red;
+	char	**cmd;
+	char	**red;
+	char	*in;
+	char	*out;
+	char	*here;
+	char	*out2;
 };
 
 // -----------------------------  FUNCTIONS --------------------------------- //
@@ -58,7 +62,7 @@ void	parse_segments(t_list *lst);
 void	parse_segment_conditions(char *str, char **new_str, int *curr_pos);
 
 //exit_utils.c
-void	exit_program(char *error, int code);
+void	readline_error(char *error, int code, bool need_free);
 
 
 #endif

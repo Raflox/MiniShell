@@ -21,13 +21,14 @@ void	print_lst(t_list *lst)
 	temp = lst;
 	while (temp)
 	{
+		printf("segment -----------------------------\n");
 		seg = (t_seg *)temp->content;
 		i = -1;
 		while (seg->cmd && seg->cmd[++i])
-			printf("arg[%d] - %s\n", i, seg->cmd[i]);
+			printf("cmd_arg[%d] - %s\n", i, seg->cmd[i]);
 		i = -1;
 		while (seg->red && seg->red[++i])
-			printf("arg[%d] - %s\n", i, seg->red[i]);
+			printf("red_arg[%d] - %s\n", i, seg->red[i]);
 		temp = temp->next;
 	}
 }

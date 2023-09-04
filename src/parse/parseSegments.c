@@ -42,9 +42,9 @@ void	parse_segment_red(char **str)
 	while (is_space((*str)[i]))
 		i++;
 	if ((*str)[i] == '\0')
-		exit_program("sh: Syntax error: newline unexpected", 0);
+		readline_error("sh: Syntax error: newline unexpected", 0, 0);
 	else if (is_greatorless((*str)[i]))
-		exit_program("sh: Syntax error: redirection unexpected", 0);
+		readline_error("sh: Syntax error: redirection unexpected", 0, 1);
 	while ((*str)[i])
 		parse_segment_conditions(*str, &new_str, &i);
 	free(*str);
@@ -58,14 +58,14 @@ void	parse_segments(t_list *lst)
 	int		i;
 
 	temp = lst;
-	while (temp)
+	while (temp && !shell()->error)
 	{
 		seg = (t_seg *)temp->content;
 		i = -1;
-		while (seg->cmd && seg->cmd[++i])
+		while (seg->cmd && seg->cmd[++i] && !shell()->error)
 			parse_segment_cmd(&seg->cmd[i]);
 		i = -1;
-		while (seg->red && seg->red[++i])
+		while (seg->red && seg->red[++i] && !shell()->error)
 			parse_segment_red(&seg->red[i]);
 		temp = temp->next;
 	}

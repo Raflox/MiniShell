@@ -34,13 +34,16 @@ static int	expand_variable(char *old_str, char **new_str, int *curr_pos)
 		return (1);
 	(*curr_pos)++;
 	start = *curr_pos;
-	while (old_str[*curr_pos] && old_str[*curr_pos] != ' '
-		&& !is_quote(old_str[*curr_pos]))
+	while (old_str[*curr_pos] && !is_space(old_str[*curr_pos])
+		&& !is_quote(old_str[*curr_pos]) && !is_token(old_str[*curr_pos]))
 		(*curr_pos)++;
 	if (start != *curr_pos)
 		add_c_to_string(new_str, '\\');
 	else
+	{
+		add_c_to_string(new_str, '$');
 		return (0);
+	}
 	return (1);
 }
 
@@ -67,11 +70,11 @@ static int	skip_quote(char *str, char **new_str, char quote, int *curr_pos)
 		if (str[*curr_pos] == quote)
 		{
 			(*curr_pos)++;
-			break ;
+			return (1);
 		}
 		add_c_to_string(new_str, str[*curr_pos]);
 	}
-	return (1);
+	return (0);
 }
 
 void	parse_segment_conditions(char *str, char **new_str, int *curr_pos)
@@ -79,12 +82,12 @@ void	parse_segment_conditions(char *str, char **new_str, int *curr_pos)
 	if (is_quote(str[*curr_pos]))
 	{
 		if (!skip_quote(str, new_str, str[*curr_pos], curr_pos))
-			exit_program("bateu nas quotes", 0);
+			readline_error("bateu nas quotes", 0, 0);
 	}
 	else if (str[*curr_pos] == '$')
 	{
 		if (!expand_variable(str, new_str, curr_pos))
-			exit_program("bateu na expand variable", 0);
+			readline_error("Olha ai as", 0, 0);
 	}
 	else
 		add_c_to_string(new_str, str[(*curr_pos)++]);

@@ -149,6 +149,7 @@ void	parse(char *input)
 	char	**parse_input;
 	int		i;
 
+	shell()->error = false;
 	parse_input = split_and_trim((find_and_replace(input, "|", 1)), 1);
 	head = NULL;
 	i = -1;
@@ -156,4 +157,5 @@ void	parse(char *input)
 		ft_lstadd_back(&head, get_segment(parse_input[i]));
 	parse_segments(head);
 	shell()->segment_lst = head;
+	print_lst(shell()->segment_lst);
 }

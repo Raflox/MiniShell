@@ -24,6 +24,6 @@
 // -----------------------------  FUNCTIONS --------------------------------- //
 
 //utils_0.c
-void	free_array(char ***array);
+void	free_array(char **array);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 22:33:11 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/05 11:38:20 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/05 16:35:37 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,24 @@ void built_in(char *input, char **envp)
 	if (!ft_strncmp(input, "pwd", 3))
 	{
 		temp = ft_split(input, ' ');
-		unset(temp[1]);
+		pwd();
 		clean_matrix(temp);
 	}
 	if (!ft_strncmp(input, "unset", ft_strlen(input)))
-		unset(input);
+		unset(input, envp);
 /* 	if (!ft_strncmp(input, "export", ft_strlen(input)))
 	if (!ft_strncmp(input, "exit", ft_strlen(input))) */
 }
 
-t_cmd	*config(void)
-{
-	t_cmd	cmd_struct;
-	return (&cmd_struct);
-}
 
 int main(int ac, char **av, char **env)
 {
-	config()->my_env = matrix_cpy(env);
+	t_cmd	cmd_struct;
+	cmd_struct.my_env = matrix_cpy(env);
 	while (1)
 	{
 		char *input = readline("Minishell>> ");
-		built_in(input, config()->my_env);
+		built_in(input, cmd_struct.my_env);
 		free(input);
 	}
 }

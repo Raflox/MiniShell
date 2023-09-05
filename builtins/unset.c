@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:09:10 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/05 13:26:24 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/05 16:36:42 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*ft_strndup(const char *s1, int n)
 	return (scpy);
 }
 
-void	unset(char *var)
+char	**unset(char *var, char **env)
 {
 	char	**temp;
 	char    **aux;
@@ -39,7 +39,9 @@ void	unset(char *var)
 
 	i = 0;
     len = 0;
-    aux = config()->my_env;
+    aux = env;
+	if (!var)
+		return NULL;
 	while (*aux)
     {
         len++;
@@ -49,9 +51,9 @@ void	unset(char *var)
 	while (i < len)
 	{
 		if (!ft_strncmp(temp[i], var, ft_strlen(var)))
-			temp[i] = ft_strndup(config()->my_env[i], (ft_strlen(var) + 1));
+			temp[i] = ft_strndup(env[i], (ft_strlen(var) + 1));
 		else
-			temp[i] = ft_strdup(config()->my_env[i]);
+			temp[i] = ft_strdup(env[i]);
 		i++;
 	}
 	temp[i] = NULL;

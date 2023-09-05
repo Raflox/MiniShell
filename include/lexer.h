@@ -1,55 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 17:26:07 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/11 18:08:35 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/16 19:08:35 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef LEXER_H
+# define LEXER_H
 
 // ------------------------------- INCLUDES --------------------------------- //
 
-# include "../lib/libft/include/libft.h"
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-// boolean lib
-# include <stdbool.h>
-//minishell libs
-# include "parsing.h"
-# include "utils.h"
-# include "lexer.h"
+// -------------------------------- ENUMS ----------------------------------- //
 
 // -------------------------------- MACROS ---------------------------------- //
 
 // ------------------------------- STRUCTS ---------------------------------- //
 
-typedef struct s_sh		t_sh;
-typedef struct s_var	t_var;
-
-struct s_sh
-{
-	bool	prompt;
-	bool	error;
-	t_var	*vars;
-	t_list	*segment_lst;
-};
-
-struct s_var
-{
-	char	**env;
-	char	**new_vars;
-};
-
-
 // -----------------------------  FUNCTIONS --------------------------------- //
 
-t_sh	*shell(void);
+void	lexer(char *str);
 
 #endif

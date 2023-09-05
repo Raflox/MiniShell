@@ -1,38 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 19:12:40 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/28 14:48:09 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-void	init_shell(void)
+int	is_space(char c)
 {
-	shell()->segment_lst = 0;
-	//shell()->vars->env = *envp;
-	shell()->vars->new_vars = 0;
-	shell()->prompt = true;
+	if (c == '\t' || c == ' ')
+		return (1);
+	return (0);
 }
 
-int	main(int ac, char **av, char **envp)
+int	is_greatorless(char c)
 {
-	char	*sh_line;
+	if (c == '<' || c == '>')
+		return (1);
+	return (0);
+}
 
-	(void)ac;
-	(void)av;
-	(void)envp;
-	//init_shell();
-	while (1)
-	{
-		sh_line = readline("minishel: ");
-		parse(sh_line);
-	}
-	(void)sh_line;
+int	is_token(char c)
+{
+	if (c == '|' || c == '<' || c == '>' || c == '&')
+		return (1);
+	return (0);
+}
+
+int	is_quote(char c)
+{
+	if (c == '"' || c == '\'')
+		return (1);
 	return (0);
 }

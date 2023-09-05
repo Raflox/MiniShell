@@ -10,7 +10,7 @@ NAME = minishell
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
 RM = @rm -rf
 
@@ -19,10 +19,13 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/main.c
+SRC			=	src/main.c \
+				src/parse/parse.c                    src/parse/utils_exit.c  src/utils/debug_utils.c \
+				src/parse/parseSegments.c            src/parse/utils_is.c    src/utils/utils0.c \
+				src/parse/parseSegmentsConditions.c  src/parse/utils_str.c
 
 #Object files
-OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
+OBJ			=	$(SRC:src/*/%.c=$(OBJ_DIR)/%.o)
 OBJ_DIR		=	obj
 
 all: $(NAME)
@@ -40,6 +43,7 @@ $(OBJ_DIR)/%.o:	src/%.c | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR)
 
 clean:
 	@rm -rf $(OBJ_DIR)

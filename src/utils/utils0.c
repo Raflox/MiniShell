@@ -1,38 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 19:12:40 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/06/28 16:56:12 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-void	init_shell(void)
+/*
+	Principal struct
+*/
+t_sh	*shell(void)
 {
-	shell()->segment_lst = 0;
-	//shell()->vars->env = *envp;
-	shell()->vars->new_vars = 0;
-	shell()->prompt = true;
+	static t_sh	shell;
+
+	return (&shell);
 }
 
-int	main(int ac, char **av, char **envp)
+/*
+	This function frees the array if it exists
+*/
+void	free_array(char ***array)
 {
-	char	*sh_line;
+	int		i;
+	int		len;
 
-	(void)ac;
-	(void)av;
-	(void)envp;
-	//init_shell();
-	while (1)
-	{
-		sh_line = readline("minishel: ");
-		parse(sh_line);
-	}
-	(void)sh_line;
-	return (0);
+	if (!(*array))
+		return ;
+	len = 0;
+	while ((*array)[len])
+		len++;
+	i = -1;
+	while (++i < len)
+		free((*array)[i]);
+	free((*array));
 }

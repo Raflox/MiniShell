@@ -6,15 +6,13 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 22:45:01 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/04 11:41:45 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/05 09:35:29 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "built_in.h"
 
-int	main(void)
+int	pwd(void)
 {
 	char	*buffer;
 	size_t	size;
@@ -28,10 +26,23 @@ int	main(void)
 	}
 
 	if (getcwd(buffer, size) != NULL)
-		printf("Current working directory: %s\n", buffer);
+		printf("%s\n", buffer);
 	else
 		perror("getcwd");
 
 	free(buffer);
 	return (0);
+}
+
+void	clean_matrix(char **matrix)
+{
+	int	i;
+
+	i = 0;
+	while (matrix[i])
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
 }

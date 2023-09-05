@@ -5,7 +5,7 @@
 NAME     := built_in
 CC       := gcc
 FLAGS    := -Wall -Wextra -Werror -fsanitize=address -g
-LIBFTA		= ./libft/libft.a
+LIBFTA		= ../lib/libft/libft.a
 
 ################################################################################
 #                                 PROGRAM'S SRCS                               #
@@ -15,6 +15,7 @@ SRCS        :=		cd.c \
 					echo.c \
 					env.c \
 					pwd.c \
+					unset.c \
 					built_in.c
                           
 OBJS        := $(SRCS:.c=.o)
@@ -39,7 +40,7 @@ RM		    := rm -f
 all:		${NAME}
 
 $(NAME): $(OBJS)
-			$(CC) $(CFLAGS) $(LIBFTA) $(OBJS) -L./libft/ -lft -lreadline -o $(NAME)
+			$(CC) $(CFLAGS) $(LIBFTA) $(OBJS) -L../lib/libft/ -lft -lreadline -o $(NAME)
 			@echo "$(GREEN)Successfully built --> $(YELLOW)$(NAME)$(DEFAULT)"
 
 

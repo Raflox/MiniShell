@@ -1,27 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 23:38:28 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/05 09:40:24 by rafilipe         ###   ########.fr       */
+/*   Created: 2023/09/05 11:09:10 by rafilipe          #+#    #+#             */
+/*   Updated: 2023/09/05 13:26:24 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in.h"
 
-char	**matrix_cpy(char **src)
+char	*ft_strndup(const char *s1, int n)
+{
+	int		i;
+	char	*scpy;
+
+	i = 0;
+	scpy = malloc(n * sizeof(char) + 1);
+	if (!scpy)
+		return (0);
+	while (i < n)
+	{
+		scpy[i] = s1[i];
+		i++;
+	}
+	scpy[i] = '\0';
+	return (scpy);
+}
+
+void	unset(char *var)
 {
 	char	**temp;
-	int		i;
 	char    **aux;
+	int		i;
     int     len;
 
 	i = 0;
     len = 0;
-    aux = src;
+    aux = config()->my_env;
 	while (*aux)
     {
         len++;
@@ -30,40 +48,12 @@ char	**matrix_cpy(char **src)
 	temp = (char **)malloc(sizeof(char *) * len + 1);
 	while (i < len)
 	{
-		temp[i] = ft_strdup(src[i]);
+		if (!ft_strncmp(temp[i], var, ft_strlen(var)))
+			temp[i] = ft_strndup(config()->my_env[i], (ft_strlen(var) + 1));
+		else
+			temp[i] = ft_strdup(config()->my_env[i]);
 		i++;
 	}
 	temp[i] = NULL;
 	return (temp);
 }
-
-// FIXME: Check how bash behaves if env == NULL.
-void	env(char **env)
-{
-	int		i;
-
-	i = 0;
-	if (!env)
-		return ;
-	while (env[i])
-	{
-        printf("%s\n", env[i]);
-		i++;
-	}
-}
-
-/* void	env(char **env)
-{
-	char **my_env;
-
-	my_env = matrix_cpy(env);
-
-    int i = 0;
-
-    while (my_env[i])
-    {
-        printf("%s\n", my_env[i]);
-        i++;
-    }
-	clean_matrix(my_env);
-} */

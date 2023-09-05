@@ -21,10 +21,8 @@ void	free_lst_content(t_list *lst)
 	while (temp)
 	{
 		seg = (t_seg *)temp->content;
-		free_array(seg->cmd);
-		if (seg->cmd)
-			printf("existe sim\n");
-		free_array(seg->red);
+		free_array(&seg->cmd);
+		free_array(&seg->red);
 		temp = temp->next;
 	}
 }
@@ -35,6 +33,6 @@ void	readline_error(char *error, int code, bool need_free)
 	shell()->error = true;
 	printf("Error: %s\n", error);
 	if (need_free)
-		free_lst_content(shell()->segment_lst);
+		return ;
 	//exit(code);
 }

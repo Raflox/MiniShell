@@ -26,9 +26,9 @@ struct s_seg
 	char	**cmd;
 	char	**red;
 	char	*in;
-	char	*out;
-	char	*here;
-	char	*out2;
+	char	**out;
+	char	**here;
+	char	**out2;
 };
 
 // -----------------------------  FUNCTIONS --------------------------------- //

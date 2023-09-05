@@ -25,14 +25,18 @@ t_sh	*shell(void)
 /*
 	This function frees the array if it exists
 */
-void	free_array(char **array)
+void	free_array(char ***array)
 {
 	int		i;
+	int		len;
 
-	if (!array)
+	if (!(*array))
 		return ;
+	len = 0;
+	while ((*array)[len])
+		len++;
 	i = -1;
-	while (array[++i])
-		free(array[i]);
-	free(array);
+	while (++i < len)
+		free((*array)[i]);
+	free((*array));
 }

@@ -131,6 +131,42 @@ t_list	*get_segment(char *input_seg)
 	return (ft_lstnew(new_seg));
 }
 
+void	get_real_red(t_list *lst)
+{
+	t_list	*temp;
+	t_seg	*seg;
+	int		i;
+
+	temp = lst;
+	while (temp)
+	{
+		seg = (t_seg *)temp->content;
+		seg->in = 0;
+		seg->here = 0;
+		seg->out = 0;
+		seg->out2 = 0;
+		i = -1;
+		while (seg->red && seg->red[++i])
+		{
+			if (seg->red[i][0] == '<')
+			{
+				if (seg->red[i][1] == '<')
+					add_str_to_array(&seg->here, &seg->red[i][2]);
+				else
+					seg->in = ft_strdup(&seg->red[i][1]);
+			}
+			else
+			{
+				if (seg->red[i][1] == '>')
+					add_str_to_array(&seg->out2, &seg->red[i][2]);
+				else
+					add_str_to_array(&seg->out, &seg->red[i][1]);
+			}
+		}
+		temp = temp->next;
+	}
+}
+
 /*
 **	Function: parse
 **	---------------------------------
@@ -157,5 +193,5 @@ void	parse(char *input)
 		ft_lstadd_back(&head, get_segment(parse_input[i]));
 	parse_segments(head);
 	shell()->segment_lst = head;
-	print_lst(shell()->segment_lst);
+	get_real_red(shell()->segment_lst);
 }

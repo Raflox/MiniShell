@@ -24,6 +24,7 @@
 // -----------------------------  FUNCTIONS --------------------------------- //
 
 //utils_0.c
-void	free_array(char **array);
+void	free_array(char ***array);
+void	free_lst_content(t_list *lst);
 
 #endif

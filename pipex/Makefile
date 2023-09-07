@@ -11,7 +11,7 @@ LIBFTA		= ./libft/libft.a
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
 
-SRCS        :=		main.c \
+SRCS        :=		simple_cmd.c \
 					utils.c \
                           
 OBJS        := $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:24:11 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/08/15 23:16:43 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/07 11:59:23 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,12 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <stdbool.h>
 # include "libft/libft.h"
 
 # define INFILE 0
 # define OUTFILE 1
+# define APPEND 2
 
 typedef struct s_pipex {
 	int		fd[2];

@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:16 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/08/29 23:33:46 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/05 19:02:31 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 // TODO: ADD APPEND PERMISSION FOR >>
 // TODO: Adapt to work without first infile
+// TODO: Close files!!!
 
 void	process_ctl(char *cmd, char **env, int flag)
 {
@@ -58,6 +59,8 @@ int main(int ac, char **av, char **env)
 	int	i;
 
 	i = 3;
+	if (ac == 2)
+		execute(av[1], env);
 	if (ac >= 4)
 	{
 		fd[0] = file_ctl(av[1], INFILE); // Open input file.

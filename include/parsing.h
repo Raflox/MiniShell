@@ -36,9 +36,7 @@ struct s_seg
 void	parse(char *input);
 
 /*
-
 **	parsing utils
-
 */
 //utils0.c
 int		is_space(char c);

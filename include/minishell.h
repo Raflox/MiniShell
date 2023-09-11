@@ -17,10 +17,11 @@
 
 # include "../lib/libft/include/libft.h"
 # include <stdio.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-// boolean lib
 # include <stdbool.h>
+
 //minishell libs
 # include "parsing.h"
 # include "utils.h"
@@ -31,7 +32,6 @@
 // ------------------------------- STRUCTS ---------------------------------- //
 
 typedef struct s_sh		t_sh;
-typedef struct s_var	t_var;
 
 struct s_sh
 {
@@ -40,13 +40,6 @@ struct s_sh
 	t_var	*vars;
 	t_list	*segment_lst;
 };
-
-struct s_var
-{
-	char	**env;
-	char	**new_vars;
-};
-
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   utils_str.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 15:11:22 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 15:10:23 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/10 12:12:14 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,9 @@ char	**split_and_trim(char *str, char c)
 	array = ft_split(str, c);
 	if (!array)
 		return (NULL);
+	i = -1;
+	while (array && array[++i])
+		printf("%s\n", array[i]);
 	i = -1;
 	while (array[++i])
 	{
@@ -162,7 +165,7 @@ void	add_str_to_array(char ***array, char *str)
 			new_array[i] = ft_strdup((*array)[i]);
 		new_array[i] = ft_strdup(str);
 		new_array[i + 1] = NULL;
-		free(*array);
+		free_array(array);
 		*array = new_array;
 	}
 }

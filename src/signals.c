@@ -1,38 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_exit.c                                       :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/28 14:49:20 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/07 23:44:36 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/09/11 15:14:24 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/09/11 15:33:33 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../include/minishell.h"
 
-void	free_lst_content(t_list *lst)
+void	sigint_handler(int n)
 {
-	t_list	*temp;
-	t_seg	*seg;
-
-	temp = lst;
-	while (temp)
-	{
-		seg = (t_seg *)temp->content;
-		free_array(&seg->cmd);
-		free_array(&seg->red);
-		temp = temp->next;
-	}
+	(void) n;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-void	readline_error(char *error, int code, bool need_free)
+void	sigquit_handler(int n)
 {
-	(void)code;
-	shell()->error = true;
-	printf("Error: %s\n", error);
-	if (need_free)
-		return ;
-	//exit(code);
+	(void) n;
+	free_all();
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void	signals(int number)
+{
+	if (number == 0)
+	{
+		signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, sigquit_handler);
+	}
 }

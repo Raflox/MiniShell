@@ -3,36 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 22:36:36 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/05 16:33:30 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/11 15:35:31 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILT_IN_H
 #define BUILT_IN_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <readline/readline.h> // FIXME: DELETE
-#include <readline/history.h> //FIXME: DELETE
-#include "../lib/libft/include/libft.h"
+// ------------------------------- INCLUDES --------------------------------- //
 
-typedef struct s_cmd
-{
-	char **my_env;
-}	t_cmd;
+// -------------------------------- MACROS ---------------------------------- //
+
+// ------------------------------- STRUCTS ---------------------------------- //
+
+// -----------------------------  FUNCTIONS --------------------------------- //
 
 void	cd(char *str);
 void	echo(char *str, int flag);
-void	env(char **env);
 int		pwd(void);
-char	**unset(char *var, char **env);
-void	clean_matrix(char **matrix);
-char	**matrix_cpy(char **src);
+void	env(char **cmd);
+void	export(char	**cmd);
+void	unset(char	**cmd);
 
+//env/utils.c
+int		search_var_in_array(char *str, char **array);
+void	rm_str_from_array(char ***array, int index);
+char	**get_export(char **envp);
+char	**sort_alpha_array(char **array);
+void	update_env(char	***env, char *cmd);
+char	*create_line_export(char *str);
 
 #endif

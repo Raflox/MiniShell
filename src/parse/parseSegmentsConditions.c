@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_segments_1.c                                 :+:      :+:    :+:   */
+/*   parseSegmentsConditions.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 16:01:09 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/07 22:14:42 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	expand_variable(char *old_str, char **new_str, int *curr_pos)
 	}
 	return (1);
 }
-
+//TODO substituir variavel $
 /*
 **	Function: skip_quote
 **	---------------------------------

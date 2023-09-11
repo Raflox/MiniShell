@@ -1,48 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 22:45:01 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 15:13:02 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/09/11 15:14:24 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/09/11 15:33:33 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../include/minishell.h"
 
-int	pwd(void)
+void	sigint_handler(int n)
 {
-	char	*buffer;
-	size_t	size;
-
-	size = 100;
-	buffer = (char *)malloc(size);
-	if (buffer == NULL)
-	{
-		perror("malloc");
-		return (1);
-	}
-
-	if (getcwd(buffer, size) != NULL)
-		printf("%s\n", buffer);
-	else
-		perror("getcwd");
-
-	free(buffer);
-	return (0);
+	(void) n;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-void	clean_matrix(char **matrix)
+void	sigquit_handler(int n)
 {
-	int	i;
+	(void) n;
+	free_all();
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
-	i = 0;
-	while (matrix[i])
+void	signals(int number)
+{
+	if (number == 0)
 	{
-		free(matrix[i]);
-		i++;
+		signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, sigquit_handler);
 	}
-	free(matrix);
 }

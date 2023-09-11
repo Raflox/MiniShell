@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 16:02:30 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/11 15:18:15 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ typedef struct s_seg	t_seg;
 
 struct s_seg
 {
+	bool	builtin;
 	char	**cmd;
 	char	**red;
 	char	*in;
-	char	**out;
+	bool	append;
 	char	**here;
-	char	**out2;
+	char	**out;
 };
 
 // -----------------------------  FUNCTIONS --------------------------------- //

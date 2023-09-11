@@ -128,9 +128,10 @@ t_list	*get_segment(char *input_seg)
 		else
 			get_segment_cmd(&new_seg->cmd, input_seg, &i);
 	}
-	return (ft_lstnew(new_seg));
+	return (ft_lstnew((t_seg *)new_seg));
 }
 
+//TODO verificar o tamanho das funções
 void	get_real_red(t_list *lst)
 {
 	t_list	*temp;
@@ -141,10 +142,10 @@ void	get_real_red(t_list *lst)
 	while (temp)
 	{
 		seg = (t_seg *)temp->content;
-		seg->in = 0;
-		seg->here = 0;
-		seg->out = 0;
-		seg->out2 = 0;
+		seg->in = NULL;
+		seg->here = NULL;
+		seg->append = false;
+		seg->out = NULL;
 		i = -1;
 		while (seg->red && seg->red[++i])
 		{
@@ -157,10 +158,9 @@ void	get_real_red(t_list *lst)
 			}
 			else
 			{
-				if (seg->red[i][1] == '>')
-					add_str_to_array(&seg->out2, &seg->red[i][2]);
-				else
-					add_str_to_array(&seg->out, &seg->red[i][1]);
+				if (seg->red[i + 1] == NULL)
+					seg->append = true;
+				add_str_to_array(&seg->out, &seg->red[i][2]);
 			}
 		}
 		temp = temp->next;
@@ -191,6 +191,7 @@ void	parse(char *input)
 	i = -1;
 	while (parse_input[++i])
 		ft_lstadd_back(&head, get_segment(parse_input[i]));
+	free_array(&parse_input);
 	parse_segments(head);
 	shell()->segment_lst = head;
 	get_real_red(shell()->segment_lst);

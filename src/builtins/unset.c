@@ -3,59 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/05 11:09:10 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/05 16:36:42 by rafilipe         ###   ########.fr       */
+/*   Created: 2023/09/11 15:11:41 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/09/11 15:12:57 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built_in.h"
+#include "../../include/minishell.h"
 
-char	*ft_strndup(const char *s1, int n)
+int	check_unset_var_in_export(char *var, char **export)
 {
+	char	*temp;
 	int		i;
-	char	*scpy;
+	int		j;
 
-	i = 0;
-	scpy = malloc(n * sizeof(char) + 1);
-	if (!scpy)
-		return (0);
-	while (i < n)
+	temp = NULL;
+	i = -1;
+	while (export && export[++i])
 	{
-		scpy[i] = s1[i];
-		i++;
+		j = 11;
+		while (export[i] && export[i][j] && export[i][j] != '=')
+			j++;
+		temp = ft_substr(export[i], 11, j - 11);
+		if (ft_strcmp(var, temp) == 0)
+		{
+			free(temp);
+			return (i);
+		}
+		free(temp);
 	}
-	scpy[i] = '\0';
-	return (scpy);
+	return (-1);
 }
 
-char	**unset(char *var, char **env)
+int	check_unset_var_in_env(char *var, char **env)
 {
-	char	**temp;
-	char    **aux;
+	char	*temp;
 	int		i;
-    int     len;
+	int		j;
 
-	i = 0;
-    len = 0;
-    aux = env;
-	if (!var)
-		return NULL;
-	while (*aux)
-    {
-        len++;
-        aux++;
-    }
-	temp = (char **)malloc(sizeof(char *) * len + 1);
-	while (i < len)
+	temp = NULL;
+	i = -1;
+	while (env && env[++i])
 	{
-		if (!ft_strncmp(temp[i], var, ft_strlen(var)))
-			temp[i] = ft_strndup(env[i], (ft_strlen(var) + 1));
-		else
-			temp[i] = ft_strdup(env[i]);
-		i++;
+		j = 0;
+		while (env[i] && env[i][j] && env[i][j] != '=')
+			j++;
+		temp = ft_substr(env[i], 0, j);
+		if (ft_strcmp(var, temp) == 0)
+		{
+			free(temp);
+			return (i);
+		}
+		free(temp);
 	}
-	temp[i] = NULL;
-	return (temp);
+	return (-1);
+}
+
+void	unset(char	**cmd)
+{
+	int		i;
+	int		index;
+
+	if (!cmd || ft_strncmp(cmd[0], "unset", 5) != 0)
+		return ;
+	if (cmd[1])
+	{
+		i = 0;
+		while (cmd[++i])
+		{
+			index = check_unset_var_in_export(cmd[i], shell()->export);
+			if (index != -1)
+				rm_str_from_array(&shell()->export, index);
+			index = check_unset_var_in_env(cmd[i], shell()->env);
+			if (index != -1)
+				rm_str_from_array(&shell()->env, index);
+		}
+	}
 }

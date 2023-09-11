@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 21:57:13 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/04 23:21:13 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/11 15:13:05 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built_in.h"
+#include "../../include/minishell.h"
 
 void	cd(char *str)
 {

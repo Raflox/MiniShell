@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 16:18:09 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/11 16:33:11 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,6 @@
 
 //TODO: Create function to get last outfile from matrix.
 //TODO: Create all outfiles, but only write to last.
-
-typedef struct s_cmd
-{
-	char	*cmd;
-	char	*infile;
-	char	*outfile;
-	char	**env;
-	char	*red_type;
-	bool	is_built_in;
-}	t_cmd;
 
 void	process_ctl(char *cmd, char **env, int flag)
 {
@@ -68,8 +58,8 @@ void	executor(t_seg *seg)
 {
 	int		in_fd;
 	int		out_fd;
-	char	*cmd;
-	int		pid;
+	//char	*cmd;
+	//int		pid;
 	int		i;
 
 	i = 0;

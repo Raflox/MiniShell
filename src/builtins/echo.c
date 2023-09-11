@@ -6,11 +6,11 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:49:41 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 15:13:03 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/11 16:23:47 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include <minishell.h>
 
 void	echo(char *str, int flag)
 {

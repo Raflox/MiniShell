@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:34 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 16:20:09 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/11 16:34:18 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,6 @@ void	error(char *loc)
 	fprintf(stderr, "%s\n", loc);
 	perror("Error");
 	exit(EXIT_FAILURE);
-}
-
-void	clean_matrix(char **matrix)
-{
-	int	i;
-
-	i = 0;
-	while (matrix[i])
-	{
-		free(matrix[i]);
-		i++;
-	}
-	free(matrix);
 }
 
 static char	*find_path(char **envp, char *cmd)
@@ -58,7 +45,7 @@ static char	*find_path(char **envp, char *cmd)
 		free(path);
 		i++;
 	}
-	clean_matrix(paths);
+	free_array(&paths);
 	return (cmd);
 }
 
@@ -72,7 +59,7 @@ void	execute(char *cmd, char **envp)
 	path = find_path(envp, cmd);
 	if (!path)
 	{
-		clean_matrix(exec_cmd);
+		free_array(&exec_cmd);
 		error("clean path matrix");
 	}
 	if (execve(path, exec_cmd, envp) == -1)

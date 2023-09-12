@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/12 15:48:36 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:51:38 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void	get_real_red(t_list *lst)
 	}
 }
 
-void	is_builtin(char *str)
+int	is_builtin(char *str)
 {
 	if (ft_strcmp(str, "export") == 0 || ft_strcmp(str, "env") == 0)
 		return (1);

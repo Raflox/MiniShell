@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/12 12:57:51 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:48:36 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,39 @@ void	get_real_red(t_list *lst)
 	}
 }
 
+void	is_builtin(char *str)
+{
+	if (ft_strcmp(str, "export") == 0 || ft_strcmp(str, "env") == 0)
+		return (1);
+	else if (ft_strcmp(str, "echo") == 0 || ft_strcmp(str, "unset") == 0)
+		return (1);
+	else if (ft_strcmp(str, "cd") == 0 || ft_strcmp(str, "pwd") == 0)
+		return (1);
+	else if (ft_strcmp(str, "exit") == 0)
+		return (0);
+	return (0);
+}
+
+void	init_built_in_flag(t_list *lst)
+{
+	t_list	*temp;
+	t_seg	*seg;
+	int		i;
+
+	temp = lst;
+	while (temp)
+	{
+		seg = (t_seg *)temp->content;
+		i = -1;
+		while (seg->cmd[++i])
+		{
+			if is_builtin(seg->cmd[i])
+				seg->builtin = true;
+		}
+		temp = temp->next;
+	}
+}
+
 /*
 **	Function: parse
 **	---------------------------------
@@ -198,4 +231,5 @@ void	parse(char *input)
 	parse_segments(head);
 	shell()->segment_lst = head;
 	get_real_red(shell()->segment_lst);
+	init_built_in_flag(shell()->segment_lst);
 }

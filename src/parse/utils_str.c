@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 15:11:22 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/10 12:12:14 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 10:09:05 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,6 @@ char	**split_and_trim(char *str, char c)
 	array = ft_split(str, c);
 	if (!array)
 		return (NULL);
-	i = -1;
-	while (array && array[++i])
-		printf("%s\n", array[i]);
 	i = -1;
 	while (array[++i])
 	{

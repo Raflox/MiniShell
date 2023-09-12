@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 17:08:44 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:51:38 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,10 +158,46 @@ void	get_real_red(t_list *lst)
 			}
 			else
 			{
+				if (seg->red[i][1] == '>')
+					add_str_to_array(&seg->here, &seg->red[i][2]);
+				else
+					add_str_to_array(&seg->out, &seg->red[i][1]);
 				if (seg->red[i + 1] == NULL)
 					seg->append = true;
-				add_str_to_array(&seg->out, &seg->red[i][2]);
 			}
+		}
+		temp = temp->next;
+	}
+}
+
+int	is_builtin(char *str)
+{
+	if (ft_strcmp(str, "export") == 0 || ft_strcmp(str, "env") == 0)
+		return (1);
+	else if (ft_strcmp(str, "echo") == 0 || ft_strcmp(str, "unset") == 0)
+		return (1);
+	else if (ft_strcmp(str, "cd") == 0 || ft_strcmp(str, "pwd") == 0)
+		return (1);
+	else if (ft_strcmp(str, "exit") == 0)
+		return (0);
+	return (0);
+}
+
+void	init_built_in_flag(t_list *lst)
+{
+	t_list	*temp;
+	t_seg	*seg;
+	int		i;
+
+	temp = lst;
+	while (temp)
+	{
+		seg = (t_seg *)temp->content;
+		i = -1;
+		while (seg->cmd[++i])
+		{
+			if is_builtin(seg->cmd[i])
+				seg->builtin = true;
 		}
 		temp = temp->next;
 	}
@@ -195,4 +231,5 @@ void	parse(char *input)
 	parse_segments(head);
 	shell()->segment_lst = head;
 	get_real_red(shell()->segment_lst);
+	init_built_in_flag(shell()->segment_lst);
 }

@@ -6,16 +6,16 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/12 12:22:37 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:50:18 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include <minishell.h>
 
 //TODO: Create function to get last outfile from matrix.
 //TODO: Create all outfiles, but only write to last.
 
-void	process_ctl(char **cmd, char **env, int flag)
+void	process_ctl(char **cmd, char **env)
 {
 	pid_t	pid;
 	int		pipe_fd[2];
@@ -30,12 +30,10 @@ void	process_ctl(char **cmd, char **env, int flag)
 	}
 	else
 	{
+		printf("AQUI\n");
 		close(pipe_fd[0]);
 		dup2(pipe_fd[1], STDOUT_FILENO);
-		if (flag == 0)
-			exit(1);
-		else
-			execute(cmd, env);
+		execute(cmd, env);
 	}
 }
 
@@ -59,7 +57,6 @@ void	executor(t_seg *seg)
 	int		in_fd;
 	int		out_fd;
 	int		i;
-	int		pid;
 
 	i = 0;
 	in_fd = 0;
@@ -82,17 +79,15 @@ void	executor(t_seg *seg)
 		}
 	}
 	if (seg->builtin)
-		printf("AQUI\n"); // run builtin function
-	//process_ctl(av[2], env, fd[0]); // Redirect and execute the first command.
+		printf("AQUI\n"); //is_built_in(seg->cmd);
+	process_ctl(seg->cmd, shell()->env); // Redirect and execute the first command.
 	// FIXME: ADD CONDITION HERE TO VERIFY IF THERE IS MORE THAN ONE COMMAND TO BE EXECUTED
 	/* while (i < ac - 2) //alterar iteração para listas
 	{
 		fprintf(stderr, "arg:%d\n", i);
 		process_ctl(av[i++], env, 1); // Loop to redirect and execute subsequent commands.
 	} */
-	pid = fork();
-	if (!pid)	
-		execute(seg->cmd, shell()->env); // Execute the final command.
+	//execute(seg->cmd, shell()->env); // Execute the final command.
 	if (in_fd)
 		close(in_fd);
 	if (out_fd)

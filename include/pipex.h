@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:24:11 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 16:19:13 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/12 11:00:50 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ typedef struct s_pipex {
 
 /* UTILS */
 void	error(char *loc);
-void	execute(char *cmd, char **env);
+void	execute(char **cmd, char **env);
 
 /* MAIN */
-void	simple_cmd(t_seg cmd_struct);
+void	executor(t_seg *seg);
 
 #endif

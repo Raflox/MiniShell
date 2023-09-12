@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:34 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 16:34:18 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 12:00:16 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,23 @@ static char	*find_path(char **envp, char *cmd)
 	return (cmd);
 }
 
-void	execute(char *cmd, char **envp)
+void	execute(char **cmd, char **envp)
 {
-	char	**exec_cmd;
+	//char	**exec_cmd;
 	char	*path;
 
-	exec_cmd = ft_split(cmd, ' ');
-	cmd = *exec_cmd;
-	path = find_path(envp, cmd);
+	/* exec_cmd = ft_split(cmd, ' ');
+	cmd = *exec_cmd; */
+	path = find_path(envp, cmd[0]);
 	if (!path)
 	{
-		free_array(&exec_cmd);
-		error("clean path matrix");
+		//TODO: Check this case
+		/* free_array(&exec_cmd);
+		error("clean path matrix"); */
 	}
-	if (execve(path, exec_cmd, envp) == -1)
+	if (execve(path, cmd, envp) == -1)
 	{
-		fprintf(stderr, "PATH: %s\nexec_cmd: %s\n", path, *exec_cmd);
+		fprintf(stderr, "PATH: %s\nexec_cmd: %s\n", path, cmd[0]);
 		error("execve error");
 	}
 }

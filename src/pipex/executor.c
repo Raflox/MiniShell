@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/12 10:01:44 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/12 12:22:37 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //TODO: Create function to get last outfile from matrix.
 //TODO: Create all outfiles, but only write to last.
 
-void	process_ctl(char *cmd, char **env, int flag)
+void	process_ctl(char **cmd, char **env, int flag)
 {
 	pid_t	pid;
 	int		pipe_fd[2];
@@ -59,8 +59,11 @@ void	executor(t_seg *seg)
 	int		in_fd;
 	int		out_fd;
 	int		i;
+	int		pid;
 
 	i = 0;
+	in_fd = 0;
+	out_fd = 0;
 	if (seg->in) //get infile from first element of list
 	{
 		in_fd = file_ctl(seg->in, INFILE);
@@ -80,16 +83,20 @@ void	executor(t_seg *seg)
 	}
 	if (seg->builtin)
 		printf("AQUI\n"); // run builtin function
-/* 	process_ctl(av[2], env, fd[0]); // Redirect and execute the first command.
+	//process_ctl(av[2], env, fd[0]); // Redirect and execute the first command.
 	// FIXME: ADD CONDITION HERE TO VERIFY IF THERE IS MORE THAN ONE COMMAND TO BE EXECUTED
-	while (i < ac - 2) //alterar iteração para listas
+	/* while (i < ac - 2) //alterar iteração para listas
 	{
 		fprintf(stderr, "arg:%d\n", i);
 		process_ctl(av[i++], env, 1); // Loop to redirect and execute subsequent commands.
-	}
-	execute(av[i], env); // Execute the final command. */
-	close(in_fd);
-	close(out_fd);
+	} */
+	pid = fork();
+	if (!pid)	
+		execute(seg->cmd, shell()->env); // Execute the final command.
+	if (in_fd)
+		close(in_fd);
+	if (out_fd)
+		close(out_fd);
 }
 
 void	seg_handler(t_sh cmd_struct)
@@ -106,14 +113,7 @@ void	seg_handler(t_sh cmd_struct)
 
 /* int	main(int ac, char **av, char **env)
 {
-	t_cmd	cmd_struct;
-
-	cmd_struct.cmd = "grep rafael";
-	cmd_struct.infile = "test.txt";
-	cmd_struct.outfile = "outfile";
-	cmd_struct.env = env;
-	cmd_struct.is_built_in = true;
-	cmd_struct.red_type = "append";
-
-	simple_cmd(cmd_struct);
+	(void)ac;
+	(void)av;
+	(void)env;
 } */

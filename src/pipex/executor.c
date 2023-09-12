@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 16:33:11 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 10:01:44 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ void	executor(t_seg *seg)
 {
 	int		in_fd;
 	int		out_fd;
-	//char	*cmd;
-	//int		pid;
 	int		i;
 
 	i = 0;

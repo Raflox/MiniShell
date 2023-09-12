@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/28 17:08:44 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 12:57:51 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,9 +158,12 @@ void	get_real_red(t_list *lst)
 			}
 			else
 			{
+				if (seg->red[i][1] == '>')
+					add_str_to_array(&seg->here, &seg->red[i][2]);
+				else
+					add_str_to_array(&seg->out, &seg->red[i][1]);
 				if (seg->red[i + 1] == NULL)
 					seg->append = true;
-				add_str_to_array(&seg->out, &seg->red[i][2]);
 			}
 		}
 		temp = temp->next;

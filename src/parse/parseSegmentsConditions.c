@@ -6,11 +6,52 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/07 22:14:42 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 14:58:27 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+static int	skip_quote(char *str, char **new_str, char quote, int *curr_pos);
+
+int	get_variable_size(char *str)
+{
+	int		i;
+
+	i = 0;
+	if (!str)
+		return (-1);
+	while (str[i] && str[i] != '=')
+		i++;
+	return (i);
+}
+
+void	expander(char *old_str, char **new_str, int start, int *curr_pos)
+{
+	char	*expand_temp;
+	char	*temp;
+	int		i;
+	int		j;
+
+	expand_temp = NULL;
+	temp = NULL;
+	while (start < *curr_pos)
+		add_c_to_string(&expand_temp, old_str[start++]);
+	i = -1;
+	while (shell()->env[++i])
+	{
+		j = get_variable_size(shell()->env[i]);
+		temp = ft_substr(shell()->env[i], 0, j);
+		if (ft_strcmp(expand_temp, temp) == 0)
+		{
+			free(temp);
+			while (shell()->env[i][++j])
+				add_c_to_string(new_str, shell()->env[i][j]);
+			break ;
+		}
+		free(temp);
+	}
+}
 
 /*
 **	Function: expand_variable
@@ -24,29 +65,31 @@
 **	Return:
 **		Non.
 */
-static int	expand_variable(char *old_str, char **new_str, int *curr_pos)
+static void	expand_variable(char *old_str, char **new_str, int *curr_pos)
 {
-	int	start;
+	int		start;
+	char	*exit_var;
+	int		i;
 
-	if (old_str[*curr_pos + 1] == '?')
-		return (2);
-	if (old_str[*curr_pos + 1] == ' ')
-		return (1);
 	(*curr_pos)++;
 	start = *curr_pos;
-	while (old_str[*curr_pos] && !is_space(old_str[*curr_pos])
-		&& !is_quote(old_str[*curr_pos]) && !is_token(old_str[*curr_pos]))
+	while (old_str[(*curr_pos)] && !is_token(old_str[*curr_pos])
+		&& !is_quote(old_str[*curr_pos]) && old_str[(*curr_pos)] != '$'
+		&& old_str[(*curr_pos)] != '?')
 		(*curr_pos)++;
-	if (start != *curr_pos)
-		add_c_to_string(new_str, '\\');
-	else
+	if (old_str[(*curr_pos)] == '?')
 	{
-		add_c_to_string(new_str, '$');
-		return (0);
+		(*curr_pos)++;
+		exit_var = ft_itoa(shell()->error);
+		i = -1;
+		while (exit_var[++i])
+			add_c_to_string(new_str, exit_var[i]);
+		free(exit_var);
 	}
-	return (1);
+	else if (start != *curr_pos)
+		expander(old_str, new_str, start, curr_pos);
 }
-//TODO substituir variavel $
+
 /*
 **	Function: skip_quote
 **	---------------------------------
@@ -82,13 +125,10 @@ void	parse_segment_conditions(char *str, char **new_str, int *curr_pos)
 	if (is_quote(str[*curr_pos]))
 	{
 		if (!skip_quote(str, new_str, str[*curr_pos], curr_pos))
-			readline_error("bateu nas quotes", 0, 0);
+			readline_error("minishel: doens't interpret unclosed quotes", 0, 0);
 	}
 	else if (str[*curr_pos] == '$')
-	{
-		if (!expand_variable(str, new_str, curr_pos))
-			readline_error("Olha ai as", 0, 0);
-	}
+		expand_variable(str, new_str, curr_pos);
 	else
 		add_c_to_string(new_str, str[(*curr_pos)++]);
 }

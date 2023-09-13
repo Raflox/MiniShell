@@ -6,11 +6,11 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:34 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/12 12:00:16 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/13 12:20:57 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/pipex.h"
+#include <minishell.h>
 
 // TODO:	ADD FUNCTION TO CLEAN AND CLOSE UPON ERROR?
 
@@ -53,9 +53,10 @@ void	execute(char **cmd, char **envp)
 {
 	//char	**exec_cmd;
 	char	*path;
-
+	//fprintf(stderr, "CMD 0 = %s\n", cmd[0]);
 	/* exec_cmd = ft_split(cmd, ' ');
 	cmd = *exec_cmd; */
+	//print_array(cmd);
 	path = find_path(envp, cmd[0]);
 	if (!path)
 	{
@@ -63,9 +64,12 @@ void	execute(char **cmd, char **envp)
 		/* free_array(&exec_cmd);
 		error("clean path matrix"); */
 	}
+	//fprintf(stderr, "PATH = %s\n", path);
 	if (execve(path, cmd, envp) == -1)
 	{
-		fprintf(stderr, "PATH: %s\nexec_cmd: %s\n", path, cmd[0]);
-		error("execve error");
+		print_array(envp);
+		//fprintf(stderr, "PATH: %s\nexec_cmd: %s\n", path, cmd[0]);
+		//error("execve error");
+		exit(1);
 	}
 }

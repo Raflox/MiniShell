@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/11 16:19:38 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/12 18:40:40 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,8 @@
 
 // ------------------------------- STRUCTS ---------------------------------- //
 
-typedef struct s_sh		t_sh;
 
-struct s_sh
+typedef struct s_sh
 {
 	bool	error;
 	t_list	*segment_lst;
@@ -46,7 +45,7 @@ struct s_sh
 	char	*oldpwd;
 	char	*pwd;
 	int		exit_code;
-};
+}	t_sh;
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 

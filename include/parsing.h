@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/11 15:18:15 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/13 12:08:49 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ typedef struct s_seg	t_seg;
 
 struct s_seg
 {
+	int		idx;
+	pid_t	pid;
 	bool	builtin;
 	char	**cmd;
 	char	**red;
@@ -30,6 +32,8 @@ struct s_seg
 	bool	append;
 	char	**here;
 	char	**out;
+	int		pipe_fd[2];
+	int		dup_fd[2];
 };
 
 // -----------------------------  FUNCTIONS --------------------------------- //

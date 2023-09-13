@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/12 15:51:38 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 16:10:31 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ void	init_built_in_flag(t_list *lst)
 		i = -1;
 		while (seg->cmd[++i])
 		{
-			if is_builtin(seg->cmd[i])
+			if (is_builtin(seg->cmd[i]))
 				seg->builtin = true;
 		}
 		temp = temp->next;

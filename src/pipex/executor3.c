@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/13 12:24:30 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/12 19:10:15 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,26 @@
 //TODO: Create function to get last outfile from matrix.
 //TODO: Create all outfiles, but only write to last.
 
-void	process_ctl(t_list *curr, char **env)
+void	process_ctl(char **cmd, char **env)
 {
-	t_seg*	cmd;
-	t_seg*	next = NULL;
-	//int		pipe_fd[2];
+	pid_t	pid;
+	int		pipe_fd[2];
 
-	cmd = curr->content;
-	if (curr->next)
-		next = curr->next->content;
-	if (next)
-		pipe(next->pipe_fd);
-	cmd->pid = fork();
-	if (cmd->pid)
+	pipe(pipe_fd);
+	pid = fork();
+	if (pid)
 	{
-		if (next)
-			close(next->pipe_fd[1]);
-		if (cmd->idx > 0)
-			close(cmd->pipe_fd[0]);
+		close(pipe_fd[1]);
+		dup2(pipe_fd[0], STDIN_FILENO);
+		//waitpid(pid, NULL, 0);
 	}
 	else
 	{
-	//	print_array(cmd);
-		//printf("AQUI\n");
-		if (cmd->idx > 0)
-		{
-			cmd->dup_fd[0] = dup2(cmd->pipe_fd[0], STDIN_FILENO);
-			close(cmd->pipe_fd[0]);
-		}
-		if (curr->next)
-		{
-			cmd->dup_fd[1] = dup2(next->pipe_fd[1], STDOUT_FILENO);
-			close(next->pipe_fd[0]);
-			close(next->pipe_fd[1]);
-		}
-		
-		//printf("from process_ctl: \n");
-		//dup2(pipe_fd[1], STDOUT_FILENO);
-		execute(cmd->cmd, env);
+		printf("AQUI\n");
+		printf("CMD 0 = %s\n", cmd[0]);
+		close(pipe_fd[0]);
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		execute(cmd, env);
 	}
 }
 
@@ -71,13 +53,21 @@ int	file_ctl(char *filename, int mode)
 	return (open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644));
 }
 
-void executeCommand(t_seg *seg)
+void	executor(t_seg *seg)
 {
-    if (seg->in) {
-        in_fd = file_ctl(seg->in, INFILE);
-        dup2(in_fd, STDIN_FILENO);
-    }
+	int		in_fd;
+	int		out_fd;
+	int		i;
+	int		pid;
 
+	i = 0;
+	in_fd = 0;
+	out_fd = 0;
+	if (seg->in) //get infile from first element of list
+	{
+		in_fd = file_ctl(seg->in, INFILE);
+		dup2(in_fd, STDIN_FILENO);
+	}
 	if (seg->out) //get outfile from last element of list
 	{
 		while (seg->out[i])
@@ -90,32 +80,35 @@ void executeCommand(t_seg *seg)
 				dup2(out_fd, STDOUT_FILENO);
 		}
 	}
+/* 	if (seg->builtin)
+		printf("AQUI\n"); */ //is_built_in(seg->cmd);
+	//process_ctl(seg->cmd, shell()->env); // Redirect and execute the first command.
+	//seg_handler(seg);
+	// FIXME: ADD CONDITION HERE TO VERIFY IF THERE IS MORE THAN ONE COMMAND TO BE EXECUTED
+	/* while (i < ac - 2) //alterar iteração para listas
+	{
+		fprintf(stderr, "arg:%d\n", i);
+		process_ctl(av[i++], env, 1); // Loop to redirect and execute subsequent commands.
+	} */
+	pid = fork();
+	if (!pid)
+		execute(seg->cmd, shell()->env); // Execute the final command.
+	if (in_fd)
+		close(in_fd);
+	if (out_fd)
+		close(out_fd);
 }
 
-void executeCommandList(t_list *seg_list)
+void	seg_handler(t_sh *cmd_struct)
 {
-	int idx = 0;
-	int	status;
-    t_list *current = seg_list;
+	t_list	*pipe_seg;
 
-    while (current != NULL)
+	pipe_seg = cmd_struct.segment_lst;
+	while (pipe_seg != NULL)
 	{
-		((t_seg*)current->content)->idx = idx++;
-		//fprintf(stderr, "AQUI\n");
-		//fprintf(stderr, "CMD::%s\n", ((t_seg *)current->content)->cmd[0]);
-        //executeCommand(current);
-        process_ctl(current, shell()->env);
-		
-		current = current->next;
-    }
-	current = seg_list;
-	while (current)
-	{
-		waitpid(((t_seg*)current->content)->pid, &status, 0);
-		current = current->next;
+		executor((t_seg *)pipe_seg->content);
+		pipe_seg = pipe_seg->next;
 	}
-	if (WIFEXITED(status))
-		shell()->exit_code = WEXITSTATUS(status);
 }
 
 /* int	main(int ac, char **av, char **env)

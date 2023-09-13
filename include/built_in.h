@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 22:36:36 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 15:35:31 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:44:02 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int		pwd(void);
 void	env(char **cmd);
 void	export(char	**cmd);
 void	unset(char	**cmd);
+void	is_built_in(char **cmd);
 
 //env/utils.c
 int		search_var_in_array(char *str, char **array);

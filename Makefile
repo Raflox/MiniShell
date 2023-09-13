@@ -9,9 +9,9 @@ COLOUR_END	=	\033[0m
 NAME = minishell
 
 #Compiler flags
-CC = @gcc
-CFLAGS = -Wall -Wextra -Werror -I$(INC) -fsanitize=address -g
-
+CC = @cc
+CFLAGS = -Wall -Wextra -Werror -I$(INC) -fsanitize=address,undefined -g
+LDFLAGS= -L /opt/homebrew/opt/readline/lib -I /opt/homebrew/opt/readline/include
 RM = @rm -rf
 
 #libft
@@ -37,7 +37,7 @@ $(NAME):	$(OBJ) | $(OBJ_DIR)
 	@make --silent -C $(LIBFT_DIR)
 	@echo "$(GREEN)libft successfully compiled.$(COLOUR_END)"
 	@echo "$(BLACK)Compiling $(NAME)...$(COLOUR_END)"
-	@$(CC) $(CFLAGS) -o $(@) -lreadline -I /usr/local/include $(^) $(LIBFT_A)
+	@$(CC) $(CFLAGS) -o $(@) -lreadline -I /usr/local/include $(LDFLAGS) $(^) $(LIBFT_A)
 	@echo "$(GREEN)$(NAME) successfully compiled.$(COLOUR_END)"
 
 $(OBJ_DIR)/%.o:	src/%.c | $(OBJ_DIR)

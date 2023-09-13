@@ -6,11 +6,11 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/13 10:57:29 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:23:04 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include <minishell.h>
 
 void	init_shell(void)
 {
@@ -41,7 +41,13 @@ int	main(int ac, char **av, char **envp)
 			//export(((t_seg *)(shell()->segment_lst)->content)->cmd);
 			//unset(((t_seg *)(shell()->segment_lst)->content)->cmd);
 			//env(((t_seg *)(shell()->segment_lst)->content)->cmd);
-			executeCommandList(shell()->segment_lst);
+			if (((t_seg *)shell()->segment_lst->content)->builtin && !shell()->error)
+				is_built_in(((t_seg *)shell()->segment_lst->content)->cmd);
+			else
+			{
+				if (!shell()->error)
+					executeCommandList(shell()->segment_lst);
+			}
 			free_seg();
 		}
 	}

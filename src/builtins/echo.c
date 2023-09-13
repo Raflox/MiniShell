@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:49:41 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/11 16:23:47 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:46:26 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void	echo(char *str, int flag)
 	}
 	if (!flag)
 	{
-		printf("%s", &str[5]);
+		printf("%s", str);
 		printf("\n");
 	}
 	else
 	{
-		printf("%s", &str[8]);
+		printf("%s", str);
 	}
 }

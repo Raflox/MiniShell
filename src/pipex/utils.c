@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:34 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/13 12:20:57 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:53:09 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ void	execute(char **cmd, char **envp)
 	//fprintf(stderr, "PATH = %s\n", path);
 	if (execve(path, cmd, envp) == -1)
 	{
-		print_array(envp);
+		//print_array(envp);
 		//fprintf(stderr, "PATH: %s\nexec_cmd: %s\n", path, cmd[0]);
-		//error("execve error");
+		perror("Error: ");
 		exit(1);
 	}
 }

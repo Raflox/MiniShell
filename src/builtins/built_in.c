@@ -6,31 +6,30 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 10:06:42 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/12 17:15:11 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:10:00 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void is_built_in(char **cmd)
+void	is_built_in(char **cmd)
 {
-	char **temp;
-	if (!ft_strncmp(cmd[0], "cd", 2))
+	if (!ft_strcmp(cmd[0], "cd"))
 		cd(cmd[1]);
-	if (!ft_strncmp(cmd[0], "echo", 4))
+	else if (!ft_strcmp(cmd[0], "echo"))
 	{
-		if (!(ft_strncmp(cmd[1], "-n", 2)))	
-			echo(cmd, 1);
-		else
-			echo(cmd, 0);
+		if (cmd[1] && !(ft_strcmp(cmd[1], "-n")))	
+			echo(cmd[2], 1);
+		else if (cmd[1])
+			echo(cmd[1], 0);
 	}
-	if (!ft_strncmp(cmd[0], "env", 3))
+	else if (!ft_strcmp(cmd[0], "env"))
 		env(shell()->env);
-	if (!ft_strncmp(cmd[0], "pwd", 3))
+	else if (!ft_strcmp(cmd[0], "pwd"))
 		pwd();
-	if (!ft_strncmp(cmd[0], "unset", ft_strlen(cmd)))
+	else if (!ft_strcmp(cmd[0], "unset"))
 		unset(cmd);
-	if (!ft_strncmp(cmd[0], "export", ft_strlen(cmd)))
+	else if (!ft_strcmp(cmd[0], "export"))
 		export(cmd);
-	/* if (!ft_strncmp(input, "exit", ft_strlen(input))) */
+	/* if (!ft_strcmp(input, "exit", ft_strlen(in))) */
 }

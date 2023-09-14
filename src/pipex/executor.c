@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/13 12:24:30 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/13 13:54:13 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,9 @@ void	process_ctl(t_list *curr, char **env)
 		//printf("from process_ctl: \n");
 		//dup2(pipe_fd[1], STDOUT_FILENO);
 		execute(cmd->cmd, env);
+		close(cmd->dup_fd[0]);
+		close(cmd->dup_fd[1]);
+		exit(shell()->exit_code);
 	}
 }
 
@@ -73,7 +76,8 @@ int	file_ctl(char *filename, int mode)
 
 void executeCommand(t_seg *seg)
 {
-    if (seg->in) {
+	(void)seg;
+/*     if (seg->in) {
         in_fd = file_ctl(seg->in, INFILE);
         dup2(in_fd, STDIN_FILENO);
     }
@@ -89,7 +93,7 @@ void executeCommand(t_seg *seg)
 			if (!seg->out[i + 1])
 				dup2(out_fd, STDOUT_FILENO);
 		}
-	}
+	} */
 }
 
 void executeCommandList(t_list *seg_list)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseSegmentsConditions.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/12 14:58:27 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:21:33 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,8 @@ static void	expand_variable(char *old_str, char **new_str, int *curr_pos)
 
 	(*curr_pos)++;
 	start = *curr_pos;
-	while (old_str[(*curr_pos)] && !is_token(old_str[*curr_pos])
-		&& !is_quote(old_str[*curr_pos]) && old_str[(*curr_pos)] != '$'
-		&& old_str[(*curr_pos)] != '?')
+	while ((ft_isalpha(old_str[(*curr_pos)])
+		|| ft_isdigit(old_str[(*curr_pos)]) || old_str[*curr_pos] == '_'))
 		(*curr_pos)++;
 	if (old_str[(*curr_pos)] == '?')
 	{
@@ -115,6 +114,8 @@ static int	skip_quote(char *str, char **new_str, char quote, int *curr_pos)
 			(*curr_pos)++;
 			return (1);
 		}
+		if (str[*curr_pos] == '\0')
+			break ;
 		add_c_to_string(new_str, str[*curr_pos]);
 	}
 	return (0);

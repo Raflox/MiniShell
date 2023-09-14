@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:07:10 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/11 15:10:32 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:52:03 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	update_env(char	***env, char *cmd)
 
 void	env(char **cmd)
 {
-	if (ft_strncmp(cmd[0], "env", 3) == 0)
+	printf("AQUI\n");
+	if (ft_strcmp(cmd[0], "env") == 0)
 		print_array(shell()->env);
 }

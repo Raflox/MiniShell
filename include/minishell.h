@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/12 18:40:40 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/14 12:53:41 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,16 @@
 # include "built_in.h"
 # include "parsing.h"
 # include "utils.h"
-
-//pipex
-#include "pipex.h"
+# include "pipex.h"
 
 // -------------------------------- MACROS ---------------------------------- //
 
 // ------------------------------- STRUCTS ---------------------------------- //
 
-
 typedef struct s_sh
 {
 	bool	error;
+	bool	prompt;
 	t_list	*segment_lst;
 	char	**env;
 	char	**export;

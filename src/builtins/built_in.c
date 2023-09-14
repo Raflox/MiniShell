@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 10:06:42 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/13 18:10:00 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/14 13:38:18 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,17 @@
 void	is_built_in(char **cmd)
 {
 	if (!ft_strcmp(cmd[0], "cd"))
-		cd(cmd[1]);
+		cd(cmd);
 	else if (!ft_strcmp(cmd[0], "echo"))
-	{
-		if (cmd[1] && !(ft_strcmp(cmd[1], "-n")))	
-			echo(cmd[2], 1);
-		else if (cmd[1])
-			echo(cmd[1], 0);
-	}
+		echo(cmd);
 	else if (!ft_strcmp(cmd[0], "env"))
-		env(shell()->env);
+		env(cmd);
 	else if (!ft_strcmp(cmd[0], "pwd"))
 		pwd();
 	else if (!ft_strcmp(cmd[0], "unset"))
 		unset(cmd);
 	else if (!ft_strcmp(cmd[0], "export"))
 		export(cmd);
-	/* if (!ft_strcmp(input, "exit", ft_strlen(in))) */
+	else if (!ft_strcmp(cmd[0], "exit"))
+		ft_exit(cmd);
 }

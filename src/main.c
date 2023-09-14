@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/13 18:23:04 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/14 13:42:32 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,19 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	//init_shell();
 	signals(0);
-	shell()->export = get_export(envp);
-	shell()->env = copy_array(envp);
-	shell()->pwd = "> ";
-	while (1)
+	shell()->prompt = true;
+	shell()->env = get_env(envp);
+	while (shell()->prompt)
 	{
-		sh_line = readline(shell()->pwd);
+		sh_line = readline("msh> ");
 		if (!sh_line)
 			return (0);
 		if (sh_line[0] != '\0')
 		{
 			add_history(sh_line);
 			parse(sh_line);
-			//export(((t_seg *)(shell()->segment_lst)->content)->cmd);
-			//unset(((t_seg *)(shell()->segment_lst)->content)->cmd);
-			//env(((t_seg *)(shell()->segment_lst)->content)->cmd);
-			if (((t_seg *)shell()->segment_lst->content)->builtin && !shell()->error)
+			if (((t_seg *)shell()->segment_lst->content)->builtin
+				&& !shell()->error)
 				is_built_in(((t_seg *)shell()->segment_lst->content)->cmd);
 			else
 			{
@@ -52,5 +49,5 @@ int	main(int ac, char **av, char **envp)
 		}
 	}
 	(void)sh_line;
-	return (0);
+	return (shell()->exit_code);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/13 18:31:57 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/14 13:40:07 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ int	is_builtin(char *str)
 	else if (ft_strcmp(str, "cd") == 0 || ft_strcmp(str, "pwd") == 0)
 		return (1);
 	else if (ft_strcmp(str, "exit") == 0)
-		return (0);
+		return (1);
 	return (0);
 }
 

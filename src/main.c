@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 13:42:32 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/14 17:32:46 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,5 @@ int	main(int ac, char **av, char **envp)
 			free_seg();
 		}
 	}
-	(void)sh_line;
 	return (shell()->exit_code);
 }

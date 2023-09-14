@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 12:54:37 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/14 17:25:59 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	free_seg(void)
 	t_list	*next;
 	t_seg	*seg;
 
+	if (shell()->segment_lst == NULL)
+		return ;
 	temp = shell()->segment_lst;
 	while (temp)
 	{
@@ -43,8 +45,6 @@ void	free_all(void)
 {
 	if (shell()->env)
 		free_array(&shell()->env);
-	if (shell()->export)
-		free_array(&shell()->export);
 	if (shell()->pwd)
 		free(shell()->pwd);
 	free_seg();

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:14:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/11 15:33:33 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/14 17:14:02 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@ void	sigint_handler(int n)
 void	sigquit_handler(int n)
 {
 	(void) n;
-	free_all();
-	rl_on_new_line();
-	rl_replace_line("", 0);
 	rl_redisplay();
 }
 

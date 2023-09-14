@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseSegmentsConditions.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/13 18:21:33 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/14 13:41:53 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	expand_variable(char *old_str, char **new_str, int *curr_pos)
 	if (old_str[(*curr_pos)] == '?')
 	{
 		(*curr_pos)++;
-		exit_var = ft_itoa(shell()->error);
+		exit_var = ft_itoa(shell()->exit_code);
 		i = -1;
 		while (exit_var[++i])
 			add_c_to_string(new_str, exit_var[i]);

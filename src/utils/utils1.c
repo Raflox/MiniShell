@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/11 15:16:02 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/14 12:54:37 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,49 @@ void	free_all(void)
 	free_seg();
 }
 
+void	rm_last_c_from_str(char **str)
+{
+	char	*new;
+	int		len;
+	int		i;
+
+	if (!*str)
+		return ;
+	len = ft_strlen(*str);
+	new = malloc(len);
+	i = -1;
+	while (++i < (len - 1))
+		new[i] = (*str)[i];
+	new[i] = '\0';
+	free(*str);
+	*str = new;
+}
+
+void	rm_str_from_array(char ***array, int index)
+{
+	char	**new_array;
+	int		len;
+	int		i;
+
+	if (!(*array))
+		return ;
+	else
+	{
+		len = 0;
+		while ((*array)[len])
+			len++;
+		new_array = malloc(sizeof(char *) * len);
+		if (!new_array)
+			return ;
+		i = -1;
+		len = 0;
+		while ((*array)[++i])
+		{
+			if (i != index)
+				new_array[len++] = ft_strdup((*array)[i]);
+		}
+		new_array[len] = NULL;
+		free_array(array);
+		*array = new_array;
+	}
+}

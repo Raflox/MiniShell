@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/13 12:08:49 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/14 12:50:52 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,5 @@ void	parse_segment_conditions(char *str, char **new_str, int *curr_pos);
 
 //exit_utils.c
 void	readline_error(char *error, int code, bool need_free);
-
 
 #endif

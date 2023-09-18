@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/13 13:54:13 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/19 00:17:45 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,87 @@
 //TODO: Create function to get last outfile from matrix.
 //TODO: Create all outfiles, but only write to last.
 
+int	file_ctl(char *filename, int mode)
+{
+	if (mode == INFILE)
+	{
+		if (access(filename, F_OK))
+		{
+			shell()->exit_code = 1;
+			write(STDERR_FILENO, " No such file or directory\n", 27);
+		}
+		return (open(filename, O_RDONLY));
+	}
+	else if (mode == APPEND)
+	{
+		if (access(filename, W_OK))
+		{
+			shell()->exit_code = 1;
+			write(STDERR_FILENO, " No such file or directory\n", 27);
+		}
+		return (open(filename, O_RDWR | O_CREAT | O_APPEND, 0644));
+	}
+	else
+	{
+		if (access(filename, W_OK))
+		{
+			shell()->exit_code = 1;
+			write(STDERR_FILENO, " No such file or directory\n", 27);
+		}
+		return (open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644));
+	}
+	return (-2);
+}
+
+int	open_fds(t_seg *seg)
+{
+	int	i;
+	int	in;
+	int	out;
+
+	seg->dup_fd[0] = dup(STDIN_FILENO);
+	seg->dup_fd[1] = dup(STDOUT_FILENO);
+	if (seg->in || seg->here)
+	{
+		seg->dup_fd[0] = dup(STDIN_FILENO);
+		if (seg->heredoc)
+			in = heredoc(seg);
+		else
+		{
+			if (seg->here)
+				close(heredoc(seg));
+			in = file_ctl(seg->in, INFILE);
+		}
+		if (in == -1)
+			return (1);
+		dup2(in, STDIN_FILENO);
+		close(in);
+	}
+	if (seg->out)
+	{
+		i = -1;
+		while (seg->out[++i])
+		{
+			if (seg->out[i + 1] == NULL && seg->append)
+				out = file_ctl(seg->out[i], APPEND);
+			else
+				out = file_ctl(seg->out[i], OUTFILE);
+			if (out < 0)
+				return (1);
+			if (seg->out[i + 1])
+				close(out);
+		}
+		dup2(out, STDOUT_FILENO);
+		close(out);
+	}
+	return (0);
+}
+
 void	process_ctl(t_list *curr, char **env)
 {
-	t_seg*	cmd;
-	t_seg*	next = NULL;
-	//int		pipe_fd[2];
+	t_seg	*cmd;
+	t_seg	*next = NULL;
+	int		fds;
 
 	cmd = curr->content;
 	if (curr->next)
@@ -36,8 +112,7 @@ void	process_ctl(t_list *curr, char **env)
 	}
 	else
 	{
-	//	print_array(cmd);
-		//printf("AQUI\n");
+		fds = open_fds(cmd);
 		if (cmd->idx > 0)
 		{
 			cmd->dup_fd[0] = dup2(cmd->pipe_fd[0], STDIN_FILENO);
@@ -49,82 +124,39 @@ void	process_ctl(t_list *curr, char **env)
 			close(next->pipe_fd[0]);
 			close(next->pipe_fd[1]);
 		}
-		
-		//printf("from process_ctl: \n");
-		//dup2(pipe_fd[1], STDOUT_FILENO);
-		execute(cmd->cmd, env);
+		if (!fds)
+		{
+			if (cmd->builtin)
+				is_built_in(cmd->cmd);
+			else
+				execute(cmd->cmd, env);
+		}
 		close(cmd->dup_fd[0]);
 		close(cmd->dup_fd[1]);
 		exit(shell()->exit_code);
 	}
 }
 
-int	file_ctl(char *filename, int mode)
+void	executeCommandList(t_list *seg_list)
 {
-	if (mode == INFILE)
+	int		idx;
+	int		status;
+	t_list	*current;
+
+	current = seg_list;
+	idx = 0;
+	while (current != NULL)
 	{
-		if (access(filename, F_OK))
-		{
-			error("acesss file");
-		}
-		return (open(filename, O_RDONLY));
-	}
-	if (mode == APPEND)
-		return (open(filename, O_RDWR | O_CREAT | O_APPEND, 0644));
-	return (open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644));
-}
-
-void executeCommand(t_seg *seg)
-{
-	(void)seg;
-/*     if (seg->in) {
-        in_fd = file_ctl(seg->in, INFILE);
-        dup2(in_fd, STDIN_FILENO);
-    }
-
-	if (seg->out) //get outfile from last element of list
-	{
-		while (seg->out[i])
-		{
-			if (seg->append)
-				out_fd = file_ctl(seg->out[i], APPEND);
-			else
-				out_fd = file_ctl(seg->out[i], OUTFILE);
-			if (!seg->out[i + 1])
-				dup2(out_fd, STDOUT_FILENO);
-		}
-	} */
-}
-
-void executeCommandList(t_list *seg_list)
-{
-	int idx = 0;
-	int	status;
-    t_list *current = seg_list;
-
-    while (current != NULL)
-	{
-		((t_seg*)current->content)->idx = idx++;
-		//fprintf(stderr, "AQUI\n");
-		//fprintf(stderr, "CMD::%s\n", ((t_seg *)current->content)->cmd[0]);
-        //executeCommand(current);
-        process_ctl(current, shell()->env);
-		
+		((t_seg *)current->content)->idx = idx++;
+		process_ctl(current, shell()->env);
 		current = current->next;
-    }
+	}
 	current = seg_list;
 	while (current)
 	{
-		waitpid(((t_seg*)current->content)->pid, &status, 0);
+		waitpid(((t_seg *)current->content)->pid, &status, 0);
 		current = current->next;
 	}
 	if (WIFEXITED(status))
 		shell()->exit_code = WEXITSTATUS(status);
 }
-
-/* int	main(int ac, char **av, char **env)
-{
-	(void)ac;
-	(void)av;
-	(void)env;
-} */

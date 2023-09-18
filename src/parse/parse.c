@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 13:40:07 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/18 22:57:17 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,7 @@ void	get_real_red(t_list *lst)
 		seg->in = NULL;
 		seg->here = NULL;
 		seg->append = false;
+		seg->heredoc = false;
 		seg->out = NULL;
 		i = -1;
 		while (seg->red && seg->red[++i])
@@ -152,18 +153,24 @@ void	get_real_red(t_list *lst)
 			if (seg->red[i][0] == '<')
 			{
 				if (seg->red[i][1] == '<')
+				{
 					add_str_to_array(&seg->here, &seg->red[i][2]);
+					if (seg->red[i + 1] == NULL)
+						seg->heredoc = true;
+				}
 				else
 					seg->in = ft_strdup(&seg->red[i][1]);
 			}
 			else
 			{
 				if (seg->red[i][1] == '>')
-					add_str_to_array(&seg->here, &seg->red[i][2]);
+				{
+					add_str_to_array(&seg->out, &seg->red[i][2]);
+					if (seg->red[i + 1] == NULL)
+						seg->append = true;
+				}
 				else
 					add_str_to_array(&seg->out, &seg->red[i][1]);
-				if (seg->red[i + 1] == NULL)
-					seg->append = true;
 			}
 		}
 		temp = temp->next;
@@ -204,6 +211,26 @@ void	init_built_in_flag(t_list *lst)
 	}
 }
 
+// void	parse_checker(t_list *lst)
+// {
+// 	t_list	*temp;
+// 	t_seg	*seg;
+// 	//int		i;
+
+// 	temp = lst;
+// 	while (temp)
+// 	{
+// 		seg = temp->content;
+// 		if (!seg->cmd || !seg->red)
+// 			shell()->error = true;
+// 		if (seg->cmd)
+// 		{
+// 			printf("existe e bem");
+// 		}
+// 		temp = temp->next;
+// 	}
+// }
+
 /*
 **	Function: parse
 **	---------------------------------
@@ -233,4 +260,5 @@ void	parse(char *input)
 	shell()->segment_lst = head;
 	get_real_red(shell()->segment_lst);
 	init_built_in_flag(shell()->segment_lst);
+	//parse_checker(shell()->segment_lst);
 }

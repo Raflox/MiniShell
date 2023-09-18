@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 09:42:04 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 10:13:00 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/18 15:36:41 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,17 @@ void	ft_exit(char **cmd)
 	i = -1;
 	while (cmd && cmd[1] && cmd[1][++i])
 	{
-		if (!ft_isdigit(cmd[1][i]))
+		if (i == 0 && (cmd[1][0] == '+' || cmd[1][0] == '-'))
+			continue ;
+		else if (!ft_isdigit(cmd[1][i]))
 		{
-			printf("exit: %s: numeric argument required\n", cmd[1]);
+			write(STDERR_FILENO, " numeric argument required\n", 27);
 			code = 2;
 			break ;
 		}
 		else if (cmd[1][i + 1] == '\0' && cmd[2])
 		{
-			printf("exit: too many arguments\n");
+			write(STDERR_FILENO, " too many arguments\n", 20);
 			code = 1;
 		}
 		else if (cmd[1][i + 1] == '\0')

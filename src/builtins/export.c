@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 11:40:47 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 13:26:17 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/18 15:28:18 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,10 @@ void	export(char	**cmd)
 		while (cmd[++i])
 		{
 			if (!check_export_conditions(cmd[i]))
-				printf("export: `%s': not a valid identifier\n", cmd[i]);
+			{
+				write(STDERR_FILENO, " not a valid identifier\n", 24);
+				shell()->exit_code = 1;
+			}
 			else
 				update_env(&shell()->env, cmd[i]);
 		}

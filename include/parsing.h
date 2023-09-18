@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 12:50:52 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/18 22:52:08 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_seg	t_seg;
 
 struct s_seg
 {
+	bool	heredoc;
 	int		idx;
 	pid_t	pid;
 	bool	builtin;

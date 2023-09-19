@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/13 18:23:04 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/14 18:11:53 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,16 @@ int	main(int ac, char **av, char **envp)
 {
 	char	*sh_line;
 
+	/* int fd;
+	char *line; */
+
 	(void)ac;
 	(void)av;
 	//init_shell();
 	signals(0);
 	shell()->export = get_export(envp);
 	shell()->env = copy_array(envp);
-	shell()->pwd = "> ";
+	shell()->pwd = "MINISHELL > ";
 	while (1)
 	{
 		sh_line = readline(shell()->pwd);
@@ -48,6 +51,15 @@ int	main(int ac, char **av, char **envp)
 				if (!shell()->error)
 					executeCommandList(shell()->segment_lst);
 			}
+		/* 	if (((t_seg *)shell()->segment_lst->content)->here)
+			{
+				heredoc(((t_seg *)shell()->segment_lst->content));
+				while((line = get_next_line(fd)))
+				{
+					fprintf(stderr, "%s", line);
+					free(line);
+				}
+			} */
 			free_seg();
 		}
 	}

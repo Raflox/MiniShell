@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/13 13:54:13 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/15 11:56:29 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	process_ctl(t_list *curr, char **env)
 {
 	t_seg*	cmd;
 	t_seg*	next = NULL;
-	//int		pipe_fd[2];
 
 	cmd = curr->content;
 	if (curr->next)
@@ -36,8 +35,6 @@ void	process_ctl(t_list *curr, char **env)
 	}
 	else
 	{
-	//	print_array(cmd);
-		//printf("AQUI\n");
 		if (cmd->idx > 0)
 		{
 			cmd->dup_fd[0] = dup2(cmd->pipe_fd[0], STDIN_FILENO);
@@ -49,9 +46,6 @@ void	process_ctl(t_list *curr, char **env)
 			close(next->pipe_fd[0]);
 			close(next->pipe_fd[1]);
 		}
-		
-		//printf("from process_ctl: \n");
-		//dup2(pipe_fd[1], STDOUT_FILENO);
 		execute(cmd->cmd, env);
 		close(cmd->dup_fd[0]);
 		close(cmd->dup_fd[1]);

@@ -10,7 +10,7 @@ NAME = minishell
 
 #Compiler flags
 CC = @cc
-CFLAGS = -Wall -Wextra -Werror -I$(INC) -fsanitize=address,undefined -g
+CFLAGS = -Wall -Wextra -Werror -I$(INC) -g #-fsanitize=address,undefined
 LDFLAGS= -L /opt/homebrew/opt/readline/lib -I /opt/homebrew/opt/readline/include
 RM = @rm -rf
 
@@ -58,5 +58,8 @@ fclean: clean
 	@echo "$(YELLOW)$(NAME) removed.$(COLOUR_END)"
 
 re: fclean all
+
+val: re
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --track-fds=yes ./minishell 2>valgrind.log
 
 .PHONY: all clean fclean re bonus

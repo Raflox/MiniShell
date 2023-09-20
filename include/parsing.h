@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/18 22:52:08 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/20 10:13:08 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,15 @@
 
 // ------------------------------- STRUCTS ---------------------------------- //
 
+typedef struct s_std	t_std;
 typedef struct s_seg	t_seg;
+
+struct	s_std
+{
+	int	in;
+	int	out;
+	int	err;
+};
 
 struct s_seg
 {
@@ -35,7 +43,9 @@ struct s_seg
 	char	**out;
 	int		pipe_fd[2];
 	int		dup_fd[2];
+	t_std	std;
 };
+
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 

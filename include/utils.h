@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:02:46 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 12:54:56 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/20 15:45:53 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ char	**copy_array(char **array);
 //utils1.c
 void	free_seg(void);
 void	free_all(void);
+void    free_meta(void);
 void	rm_last_c_from_str(char **str);
 
 #endif

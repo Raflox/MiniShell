@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:24:11 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/18 23:08:46 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/20 12:56:56 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	executor(t_seg *seg);
 //void executeCommand(t_seg *seg);
 void	executeCommandList(t_list *seg_list);
 
+void	open_fds_2(t_seg *cmd);
 int		open_fds(t_seg *seg);
 int		heredoc(t_seg *cmd);
 

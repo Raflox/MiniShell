@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/19 00:17:45 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/20 16:39:54 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ int	open_fds(t_seg *seg)
 	int	in;
 	int	out;
 
-	seg->dup_fd[0] = dup(STDIN_FILENO);
-	seg->dup_fd[1] = dup(STDOUT_FILENO);
 	if (seg->in || seg->here)
 	{
 		seg->dup_fd[0] = dup(STDIN_FILENO);
@@ -91,12 +89,89 @@ int	open_fds(t_seg *seg)
 	return (0);
 }
 
+void	open_fds_2(t_seg *cmd)
+{
+	int	i;
+
+	cmd->std.in = -1;
+	cmd->std.out = -1;
+	if (cmd->here || cmd->in)
+	{
+		if (cmd->heredoc)
+			cmd->std.in = heredoc(cmd);
+		else
+		{
+			close(heredoc(cmd));
+			cmd->std.in = file_ctl(cmd->in, INFILE);
+		}
+	}
+	if (cmd->out)
+	{
+		i = 0;
+		while (cmd->out[i])
+		{
+			if (cmd->append)
+				cmd->std.out = file_ctl(cmd->out[i], APPEND);
+			else
+				cmd->std.out = file_ctl(cmd->out[i], OUTFILE);
+			if (cmd->out[i + 1])
+				close(cmd->std.out);
+			i++;
+		}
+	}
+}
+
+void	process_ctl_2(t_list *curr, char **env)
+{
+	t_seg	*cmd;
+	t_seg	*next;
+	
+	cmd = curr->content;
+	next = NULL;
+	if (curr->next)
+		next = curr->next->content;
+	pipe(cmd->pipe_fd);
+	cmd->pid = fork();
+	if (cmd->pid == 0)
+	{
+		if (cmd->std.in != -1)
+			dup2(cmd->std.in, STDIN_FILENO);
+		close(cmd->pipe_fd[0]);
+		if (cmd->std.out != -1)
+		{
+			dup2(cmd->std.out, STDOUT_FILENO);
+			close(cmd->std.out);
+		}
+		else if (next && next->cmd)
+			dup2(cmd->pipe_fd[1], STDOUT_FILENO);
+		close(cmd->pipe_fd[1]);
+		if (cmd->builtin)
+			is_built_in(cmd->cmd);
+		else
+			execute(cmd->cmd, env);
+		free_all();
+		exit(shell()->exit_code);
+	}
+	else
+	{
+		if (next && next->cmd && !next->in)
+			next->std.in = dup(cmd->pipe_fd[0]);
+		if (cmd->std.in != -1)
+			close(cmd->std.in);
+		if (cmd->std.out != -1)
+			close(cmd->std.out);
+		close(cmd->pipe_fd[0]);
+		close(cmd->pipe_fd[1]);
+	}
+}
+
 void	process_ctl(t_list *curr, char **env)
 {
 	t_seg	*cmd;
 	t_seg	*next = NULL;
-	int		fds;
 
+	//cmd->dup_fd[0] = -1;
+	//cmd->dup_fd[1] = -1;
 	cmd = curr->content;
 	if (curr->next)
 		next = curr->next->content;
@@ -112,7 +187,7 @@ void	process_ctl(t_list *curr, char **env)
 	}
 	else
 	{
-		fds = open_fds(cmd);
+		open_fds_2(cmd);
 		if (cmd->idx > 0)
 		{
 			cmd->dup_fd[0] = dup2(cmd->pipe_fd[0], STDIN_FILENO);
@@ -124,15 +199,13 @@ void	process_ctl(t_list *curr, char **env)
 			close(next->pipe_fd[0]);
 			close(next->pipe_fd[1]);
 		}
-		if (!fds)
-		{
-			if (cmd->builtin)
-				is_built_in(cmd->cmd);
-			else
-				execute(cmd->cmd, env);
-		}
+		if (cmd->builtin)
+			is_built_in(cmd->cmd);
+		else
+			execute(cmd->cmd, env);
 		close(cmd->dup_fd[0]);
 		close(cmd->dup_fd[1]);
+		free_all();
 		exit(shell()->exit_code);
 	}
 }
@@ -144,11 +217,18 @@ void	executeCommandList(t_list *seg_list)
 	t_list	*current;
 
 	current = seg_list;
+	while (current)
+	{
+		open_fds_2(current->content);
+		current = current->next;
+	}
 	idx = 0;
+	current = seg_list;
 	while (current != NULL)
 	{
 		((t_seg *)current->content)->idx = idx++;
-		process_ctl(current, shell()->env);
+		//process_ctl(current, shell()->env);
+		process_ctl_2(current, shell()->env);
 		current = current->next;
 	}
 	current = seg_list;

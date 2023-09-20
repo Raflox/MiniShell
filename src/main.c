@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/18 21:51:05 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/20 16:37:17 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,29 @@ void	init_shell(void)
 
 void	run_single_builtin(t_seg *seg)
 {
-	int	fds;
+	int	in;
+	int	out;
 
-	fds = open_fds(seg);
-	if (!fds)
+	in = -1;
+	out = -1;
+	open_fds_2(seg);
+	if (seg->std.in != -1)
 	{
-		is_built_in(seg->cmd);
-		dup2(seg->dup_fd[0], STDIN_FILENO);
-		dup2(seg->dup_fd[1], STDOUT_FILENO);
+		in = dup(STDIN_FILENO);
+		dup2(seg->std.in, STDIN_FILENO);
+		close(seg->std.in);
 	}
-	close(seg->dup_fd[0]);
-	close(seg->dup_fd[1]);
+	if (seg->std.out != -1)
+	{
+		out = dup(STDOUT_FILENO);
+		dup2(seg->std.out, STDOUT_FILENO);
+		close(seg->std.out);
+	}
+	is_built_in(seg->cmd);
+	dup2(in, STDIN_FILENO);
+	dup2(out, STDOUT_FILENO);
+	close(in);
+	close(out);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -48,8 +60,11 @@ int	main(int ac, char **av, char **envp)
 	{
 		sh_line = readline("msh> ");
 		if (!sh_line)
+		{
+			free_all();
 			return (0);
-		if (sh_line[0] != '\0')
+		}
+		if (sh_line[0] != '\n')
 		{
 			add_history(sh_line);
 			parse(sh_line);
@@ -65,6 +80,5 @@ int	main(int ac, char **av, char **envp)
 			free_seg();
 		}
 	}
-	(void)sh_line;
 	return (shell()->exit_code);
 }

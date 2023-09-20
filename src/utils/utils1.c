@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 12:54:37 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/20 16:36:52 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	free_seg(void)
 	temp = shell()->segment_lst;
 	while (temp)
 	{
-		seg = (t_seg *)temp->content;
+		seg = temp->content;
 		if (seg->cmd)
 			free_array(&seg->cmd);
 		if (seg->red)
@@ -30,7 +30,7 @@ void	free_seg(void)
 			free(seg->in);
 		if (seg->out)
 			free_array(&seg->out);
-		if (seg->out)
+		if (seg->here)
 			free_array(&seg->here);
 		next = temp->next;
 		free(seg);
@@ -39,7 +39,7 @@ void	free_seg(void)
 	}
 }
 
-void	free_all(void)
+void	free_meta(void)
 {
 	if (shell()->env)
 		free_array(&shell()->env);
@@ -47,7 +47,15 @@ void	free_all(void)
 		free_array(&shell()->export);
 	if (shell()->pwd)
 		free(shell()->pwd);
+}
+
+void	free_all(void)
+{
 	free_seg();
+	free_meta();
+	close(2);
+	close(1);
+	close(0);
 }
 
 void	rm_last_c_from_str(char **str)

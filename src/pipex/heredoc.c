@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 22:29:16 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/18 23:59:01 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/20 15:55:37 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,17 @@ int	heredoc(t_seg *cmd)
 		{
 			write(0, ">", 1);
 			line = get_next_line(0);
-			write(1, line, ft_strlen(line));
-			if (line[0] != EOF)
-			{
-				if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
-					break ;
-				if (cmd->here[i + 1] == NULL)
-					write(pipe_fd[1], line, ft_strlen(line));
-				free(line);
-				line = NULL;
-			}
+			if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
+				break ;
+			if (cmd->here[i + 1] == NULL)
+				write(pipe_fd[1], line, ft_strlen(line));
+			free(line);
+			line = NULL;
 		}
 		i++;
 	}
+	if (line)
+		free(line);
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
 }

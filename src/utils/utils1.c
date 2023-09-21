@@ -12,50 +12,49 @@
 
 #include "../../include/minishell.h"
 
-void	free_seg(void)
+void	free_lst(t_list *temp)
 {
-	t_list	*temp;
 	t_list	*next;
 	t_seg	*seg;
 
-	temp = shell()->segment_lst;
 	while (temp)
 	{
-		seg = temp->content;
-		if (seg->cmd)
-			free_array(&seg->cmd);
-		if (seg->red)
-			free_array(&seg->red);
-		if (seg->in)
-			free(seg->in);
-		if (seg->out)
-			free_array(&seg->out);
-		if (seg->here)
-			free_array(&seg->here);
 		next = temp->next;
+		seg = (t_seg *)temp->content;
+		if (seg && seg->cmd)
+			free_array(&seg->cmd);
+		if (seg && seg->red)
+			free_array(&seg->red);
+		if (seg && seg->in)
+			free_array(&seg->in);
+		if (seg && seg->out)
+			free_array(&seg->out);
+		if (seg && seg->here)
+			free_array(&seg->here);
+		if (seg && seg->std.in != -1)
+			close(seg->std.in);
+		if (seg && seg->std.out != -1)
+			close(seg->std.out);
 		free(seg);
 		free(temp);
 		temp = next;
 	}
 }
 
-void	free_meta(void)
+void	free_all(bool free_env, bool free_cmd_lst, bool close_std_files, bool f_exit)
 {
-	if (shell()->env)
+	if (free_env == true)
 		free_array(&shell()->env);
-	if (shell()->export)
-		free_array(&shell()->export);
-	if (shell()->pwd)
-		free(shell()->pwd);
-}
-
-void	free_all(void)
-{
-	free_seg();
-	free_meta();
-	close(2);
-	close(1);
-	close(0);
+	if (free_cmd_lst == true)
+		free_lst(shell()->segment_lst);
+	if (close_std_files == true)
+	{
+		close(2);
+		close(1);
+		close(0);
+	}
+	if (f_exit == true)
+		exit(shell()->exit_code);
 }
 
 void	rm_last_c_from_str(char **str)

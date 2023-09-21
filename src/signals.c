@@ -28,13 +28,6 @@ void	sigquit_handler(int n)
 	//rl_on_new_line();
 }
 
-void	sigeof_handler(int n)
-{
-	(void)n;
-	printf("entrou:");
-	free_all();
-	exit(0);
-}
 
 void	signals(int number)
 {
@@ -42,6 +35,5 @@ void	signals(int number)
 	{
 		signal(SIGINT, sigint_handler);
 		signal(SIGQUIT, sigquit_handler);
-		signal(EOF, sigeof_handler);
 	}
 }

@@ -95,6 +95,20 @@ void	get_segment_cmd(char ***cmd_array, char *seg, int *curr_pos)
 	free(str);
 }
 
+
+void	init_seg(t_seg *seg)
+{
+	seg->heredoc = false;
+	seg->cmd = NULL;
+	seg->red = NULL;
+	seg->in = NULL;
+	seg->out = NULL;
+	seg->here = NULL;
+	seg->append = false;
+	seg->std.in = -1;
+	seg->std.out = -1;
+}
+
 /*
 **	Function: get_segment_red
 **	---------------------------------
@@ -117,8 +131,8 @@ t_list	*get_segment(char *input_seg)
 	new_seg = malloc(sizeof(t_seg));
 	if (!new_seg)
 		return (NULL);
-	new_seg->cmd = NULL;
-	new_seg->red = NULL;
+	new_seg->builtin = false;
+	init_seg(new_seg);
 	while (input_seg[i])
 	{
 		if (is_space(input_seg[i]))
@@ -159,7 +173,7 @@ void	get_real_red(t_list *lst)
 						seg->heredoc = true;
 				}
 				else
-					seg->in = ft_strdup(&seg->red[i][1]);
+					add_str_to_array(&seg->in, &seg->red[i][1]);
 			}
 			else
 			{
@@ -260,5 +274,4 @@ void	parse(char *input)
 	shell()->segment_lst = head;
 	get_real_red(shell()->segment_lst);
 	init_built_in_flag(shell()->segment_lst);
-	//parse_checker(shell()->segment_lst);
 }

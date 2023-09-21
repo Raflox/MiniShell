@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <signal.h>
 # include <limits.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdbool.h>
@@ -35,13 +36,10 @@
 
 typedef struct s_sh
 {
-	bool	error;
 	bool	prompt;
+	bool	error;
 	t_list	*segment_lst;
 	char	**env;
-	char	**export;
-	char	*oldpwd;
-	char	*pwd;
 	int		exit_code;
 }	t_sh;
 

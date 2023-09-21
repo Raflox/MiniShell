@@ -12,10 +12,12 @@
 
 #include <minishell.h>
 
-void	init_shell(void)
+void	init_shell(t_sh *sh, char **envp)
 {
-	shell()->segment_lst = 0;
-	//shell()->vars->env = *envp;
+	sh->error = false;
+	sh->segment_lst = NULL;
+	sh->env = get_env(envp);
+	sh->exit_code = 0;
 }
 
 void	run_single_builtin(t_seg *seg)
@@ -25,7 +27,7 @@ void	run_single_builtin(t_seg *seg)
 
 	in = -1;
 	out = -1;
-	open_fds_2(seg);
+	open_reds(seg);
 	if (seg->std.in != -1)
 	{
 		in = dup(STDIN_FILENO);
@@ -39,46 +41,85 @@ void	run_single_builtin(t_seg *seg)
 		close(seg->std.out);
 	}
 	is_built_in(seg->cmd);
-	dup2(in, STDIN_FILENO);
-	dup2(out, STDOUT_FILENO);
-	close(in);
-	close(out);
+	if (in != -1)
+	{
+		dup2(in, STDIN_FILENO);
+		close(in);
+	}
+	if (out != -1)
+	{
+		dup2(out, STDOUT_FILENO);
+		close(out);
+	}
+}
+
+void	display_error(char *prefix)
+{
+	char	*error_str;
+
+	error_str = strerror(errno);
+	if (prefix)
+		printf("%s", prefix);
+	write(2, error_str, ft_strlen(error_str));
+	shell()->exit_code = errno;
+}
+
+void	display_custom_error(char *str, int exit_code)
+{
+	if (str != NULL)
+		write(2, str, ft_strlen(str));
+	if (exit_code == -1)
+		shell()->exit_code = errno;
+}
+
+int	mainctl(int ac, char **av)
+{
+	(void)av;
+	if (ac != 1)
+		return (0);
+	return (1);
+}
+
+void	run(t_sh *sh)
+{
+	t_list	*lst;
+	t_seg	*seg;
+
+	lst = sh->segment_lst;
+	seg = lst->content;
+	if (seg->builtin && !sh->error && !lst->next)
+		run_single_builtin(seg);
+	else
+	{
+		if (!sh->error)
+			executeCommandList(shell()->segment_lst);
+	}
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	char	*sh_line;
 
-	(void)ac;
 	(void)av;
-	//init_shell();
-	signals(0);
+	if (ac != 1)
+		return (0);
 	shell()->prompt = true;
-	shell()->exit_code = 0;
-	shell()->env = get_env(envp);
+	init_shell(shell(), envp);
+	signals(0);
 	while (shell()->prompt)
 	{
 		sh_line = readline("msh> ");
 		if (!sh_line)
-		{
-			free_all();
-			return (0);
-		}
+			free_all(1, 0, 1, 1);
 		if (sh_line[0] != '\n')
 		{
 			add_history(sh_line);
 			parse(sh_line);
-			//print_array(((t_seg *)shell()->segment_lst->content)->cmd);
-			if (((t_seg *)shell()->segment_lst->content)->builtin
-				&& !shell()->error && !shell()->segment_lst->next)
-				run_single_builtin(shell()->segment_lst->content);
-			else
-			{
-				if (!shell()->error)
-					executeCommandList(shell()->segment_lst);
-			}
-			free_seg();
+			//print_array(((t_seg *)shell()->segment_lst->content)->in);
+			run(shell());
+			free_all(0, 1, 0, 0);
 		}
 	}
+	free_all(1, 0, 1, 0);
 	return (shell()->exit_code);
 }

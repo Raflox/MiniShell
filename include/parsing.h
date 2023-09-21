@@ -26,23 +26,20 @@ struct	s_std
 {
 	int	in;
 	int	out;
-	int	err;
 };
 
 struct s_seg
 {
-	bool	heredoc;
-	int		idx;
-	pid_t	pid;
 	bool	builtin;
+	bool	heredoc;
+	pid_t	pid;
 	char	**cmd;
 	char	**red;
-	char	*in;
-	bool	append;
-	char	**here;
+	char	**in;
 	char	**out;
+	char	**here;
+	bool	append;
 	int		pipe_fd[2];
-	int		dup_fd[2];
 	t_std	std;
 };
 

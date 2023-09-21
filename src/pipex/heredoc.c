@@ -38,7 +38,7 @@ int	heredoc(t_seg *cmd)
 		perror("");
 	i = 0;
 	line = NULL; 
-	while (cmd->here[i])
+	while (cmd->here && cmd->here[i])
 	{
 		while (true)
 		{

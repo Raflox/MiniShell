@@ -28,9 +28,8 @@ int		ft_strcmp(char *s1, char *s2);
 char	**copy_array(char **array);
 
 //utils1.c
-void	free_seg(void);
-void	free_all(void);
-void    free_meta(void);
+void	free_lst(t_list *temp);
+void	free_all(bool free_env, bool free_cmd_lst, bool close_std_files, bool exit);
 void	rm_last_c_from_str(char **str);
 
 #endif

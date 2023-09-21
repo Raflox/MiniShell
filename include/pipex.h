@@ -36,8 +36,7 @@ void	executor(t_seg *seg);
 //void executeCommand(t_seg *seg);
 void	executeCommandList(t_list *seg_list);
 
-void	open_fds_2(t_seg *cmd);
-int		open_fds(t_seg *seg);
+void	open_reds(t_seg *cmd);
 int		heredoc(t_seg *cmd);
 
 #endif

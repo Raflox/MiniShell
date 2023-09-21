@@ -90,7 +90,7 @@ void	export(char	**cmd)
 	{
 		export_array = sort_alpha_array(shell()->env);
 		print_export(export_array);
-		free(export_array);
+		free_array(&export_array);
 	}
 	else
 	{

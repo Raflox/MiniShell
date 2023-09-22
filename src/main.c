@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/22 12:20:20 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 21:17:19 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,11 @@ int	main(int ac, char **av, char **envp)
 		sh_line = readline("msh> ");
 		if (!sh_line)
 			free_all(1, 0, 1, 1);
-		if (sh_line[0] != '\n')
+		if (sh_line[0] != '\n' || sh_line[0] != '\0')
 		{
 			add_history(sh_line);
 			parse(sh_line);
-			//print_array(((t_seg *)shell()->segment_lst->content)->in);
+			//print_array(((t_seg *)shell()->segment_lst->content)->cmd);
 			if (!shell()->error)
 				run(shell()->segment_lst);
 			free_all(0, 1, 0, 0);

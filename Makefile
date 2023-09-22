@@ -37,7 +37,7 @@ $(NAME):	$(OBJ) | $(OBJ_DIR)
 	@make --silent -C $(LIBFT_DIR)
 	@echo "$(GREEN)libft successfully compiled.$(COLOUR_END)"
 	@echo "$(BLACK)Compiling $(NAME)...$(COLOUR_END)"
-	@$(CC) $(CFLAGS) -o $(@) $(LDFLAGS) -I/usr/local/include $(^) $(LIBFT_A) -lreadline
+	@$(CC) $(CFLAGS) -o $(@) -I/usr/local/include $(^) $(LIBFT_A) -lreadline
 	@echo "$(GREEN)$(NAME) successfully compiled.$(COLOUR_END)"
 
 $(OBJ_DIR)/%.o:	src/%.c | $(OBJ_DIR)
@@ -60,6 +60,6 @@ fclean: clean
 re: fclean all
 
 val: re
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --track-fds=yes ./minishell 2>valgrind.log
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --track-fds=yes --track-origins=yes ./minishell 2>valgrind.log
 
 .PHONY: all clean fclean re bonus

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseSegmentsConditions.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/18 15:20:21 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 22:10:35 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	expander(char *old_str, char **new_str, int start, int *curr_pos)
 		}
 		free(temp);
 	}
+	free(expand_temp);
 }
 
 /*
@@ -72,6 +73,11 @@ static void	expand_variable(char *old_str, char **new_str, int *curr_pos)
 	int		i;
 
 	(*curr_pos)++;
+	if (ft_isdigit(old_str[(*curr_pos)]))
+	{
+		(*curr_pos)++;
+		return ;
+	}
 	start = *curr_pos;
 	while ((ft_isalpha(old_str[(*curr_pos)]) \
 		|| ft_isdigit(old_str[(*curr_pos)]) \

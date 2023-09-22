@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/22 12:07:38 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 20:43:39 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void	get_segment_cmd(char ***cmd_array, char *seg, int *curr_pos)
 void	init_seg(t_seg *seg)
 {
 	seg->heredoc = false;
+	seg->red_error = 0;
 	seg->cmd = NULL;
 	seg->red = NULL;
 	seg->in = NULL;
@@ -189,9 +190,9 @@ void	get_real_red(t_list *lst)
 					close(seg->std.in);
 				if (access(&seg->red[i][1], F_OK))
 				{
-					write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+					write(STDERR_FILENO, &seg->red[i][1], ft_strlen(&seg->red[i][1]));
 					seg->red_error = 1;
-					return ;
+					break ;
 				}
 				seg->std.in = open(&seg->red[i][1], O_RDONLY);
 			}
@@ -203,9 +204,9 @@ void	get_real_red(t_list *lst)
 						close(seg->std.out);
 					if (access(&seg->red[i][2], W_OK))
 					{
-						write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+						write(STDERR_FILENO, &seg->red[i][2], ft_strlen(&seg->red[i][2]));
 						seg->red_error = 1;
-						return ;
+						break ;
 					}
 					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_APPEND, 0644);
 				}
@@ -215,14 +216,17 @@ void	get_real_red(t_list *lst)
 						close(seg->std.out);
 					if (access(&seg->red[i][1], W_OK))
 					{
-						write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+						printf("%s\n", seg->red[i]);
+						write(STDERR_FILENO, &seg->red[i][1], ft_strlen(&seg->red[i][1]));
 						seg->red_error = 1;
-						return ;
+						break ;
 					}
 					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 				}
 			}
 		}
+		if (seg->red_error == 1)
+			write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
 		temp = temp->next;
 	}
 }
@@ -261,38 +265,6 @@ void	init_built_in_flag(t_list *lst)
 	}
 }
 
-// void	parse_checker(t_list *lst)
-// {
-// 	t_list	*temp;
-// 	t_seg	*seg;
-// 	//int		i;
-
-// 	temp = lst;
-// 	while (temp)
-// 	{
-// 		seg = temp->content;
-// 		if (!seg->cmd || !seg->red)
-// 			shell()->error = true;
-// 		if (seg->cmd)
-// 		{
-// 			printf("existe e bem");
-// 		}
-// 		temp = temp->next;
-// 	}
-// }
-
-/*
-**	Function: parse
-**	---------------------------------
-**	This function parse the input line;
-
-**	Parameters:
-**		input:	input string from readline.
-
-**	Return:
-**		Non.
-*/
-
 void	parse(char *input)
 {
 	t_list	*head;
@@ -301,6 +273,7 @@ void	parse(char *input)
 
 	shell()->error = false;
 	parse_input = split_and_trim((find_and_replace(input, "|", 1)), 1);
+	//print_array(parse_input);
 	head = NULL;
 	i = -1;
 	while (parse_input[++i])
@@ -308,6 +281,7 @@ void	parse(char *input)
 	free_array(&parse_input);
 	parse_segments(head);
 	shell()->segment_lst = head;
+	//print_array(((t_seg *)shell()->segment_lst->content)->cmd);
 	get_real_red(shell()->segment_lst);
 	init_built_in_flag(shell()->segment_lst);
 }

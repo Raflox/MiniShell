@@ -3,26 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   parseSegments.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 16:00:07 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/07 23:43:53 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 22:04:09 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	parse_segment_cmd(char **str)
+void	parse_segment_cmd(char ***array, int *index, char **str)
 {
 	int		i;
 	char	*new_str;
 
+	(void)index;
+	(void)array;
 	i = 0;
 	new_str = NULL;
 	if (!(*str))
 		return ;
 	while ((*str)[i])
 		parse_segment_conditions(*str, &new_str, &i);
+	if (new_str == NULL)
+		new_str = ft_strdup("");
 	free(*str);
 	*str = new_str;
 }
@@ -63,7 +67,7 @@ void	parse_segments(t_list *lst)
 		seg = (t_seg *)temp->content;
 		i = -1;
 		while (seg->cmd && seg->cmd[++i] && !shell()->error)
-			parse_segment_cmd(&seg->cmd[i]);
+			parse_segment_cmd(&seg->cmd, &i, &seg->cmd[i]);
 		i = -1;
 		while (seg->red && seg->red[++i] && !shell()->error)
 			parse_segment_red(&seg->red[i]);

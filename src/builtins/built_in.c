@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 10:06:42 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/22 12:19:39 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 18:38:51 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 void	execute_builtin(char **cmd, int seg_error)
 {
 	if (seg_error != 0)
+	{
+		shell()->exit_code = seg_error;
 		return ;
+	}
 	if (!ft_strcmp(cmd[0], "cd"))
 		cd(cmd);
 	else if (!ft_strcmp(cmd[0], "echo"))

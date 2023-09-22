@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/18 22:57:17 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 12:07:38 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,30 @@ t_list	*get_segment(char *input_seg)
 	return (ft_lstnew((t_seg *)new_seg));
 }
 
+void	get_heredoc(t_list *lst)
+{
+	t_list	*temp;
+	t_seg	*seg;
+	int		i;
+
+	temp = lst;
+	while (temp)
+	{
+		seg = (t_seg *)temp->content;
+		i = -1;
+		while (seg->red && seg->red[++i])
+		{
+			if (seg->red[i][0] == '<' && seg->red[i][1] == '<')
+			{
+				add_str_to_array(&seg->here, &seg->red[i][2]);
+				if (seg->red[i + 1] == NULL)
+					seg->heredoc = true;
+			}
+		}
+		temp = temp->next;
+	}
+}
+
 //TODO verificar o tamanho das funções
 void	get_real_red(t_list *lst)
 {
@@ -156,35 +180,47 @@ void	get_real_red(t_list *lst)
 	while (temp)
 	{
 		seg = (t_seg *)temp->content;
-		seg->in = NULL;
-		seg->here = NULL;
-		seg->append = false;
-		seg->heredoc = false;
-		seg->out = NULL;
 		i = -1;
 		while (seg->red && seg->red[++i])
 		{
-			if (seg->red[i][0] == '<')
+			if (seg->red[i][0] == '<' && seg->red[i][1] != '<')
 			{
-				if (seg->red[i][1] == '<')
+				if (seg->std.in != -1)
+					close(seg->std.in);
+				if (access(&seg->red[i][1], F_OK))
 				{
-					add_str_to_array(&seg->here, &seg->red[i][2]);
-					if (seg->red[i + 1] == NULL)
-						seg->heredoc = true;
+					write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+					seg->red_error = 1;
+					return ;
 				}
-				else
-					add_str_to_array(&seg->in, &seg->red[i][1]);
+				seg->std.in = open(&seg->red[i][1], O_RDONLY);
 			}
 			else
 			{
-				if (seg->red[i][1] == '>')
+				if (seg->red[i][0] == '>' && seg->red[i][1] == '>')
 				{
-					add_str_to_array(&seg->out, &seg->red[i][2]);
-					if (seg->red[i + 1] == NULL)
-						seg->append = true;
+					if (seg->std.out != -1)
+						close(seg->std.out);
+					if (access(&seg->red[i][2], W_OK))
+					{
+						write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+						seg->red_error = 1;
+						return ;
+					}
+					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_APPEND, 0644);
 				}
-				else
-					add_str_to_array(&seg->out, &seg->red[i][1]);
+				else if (seg->red[i][0] == '>' && seg->red[i][1] != '>')
+				{
+					if (seg->std.out != -1)
+						close(seg->std.out);
+					if (access(&seg->red[i][1], W_OK))
+					{
+						write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+						seg->red_error = 1;
+						return ;
+					}
+					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+				}
 			}
 		}
 		temp = temp->next;

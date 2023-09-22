@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/20 10:13:08 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 11:08:42 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ struct s_seg
 {
 	bool	builtin;
 	bool	heredoc;
+	bool	red_error;
 	pid_t	pid;
 	char	**cmd;
 	char	**red;

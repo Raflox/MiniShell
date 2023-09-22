@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/20 16:39:54 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 12:19:51 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,39 +20,29 @@ int	file_ctl(char *filename, int mode)
 	if (mode == INFILE)
 	{
 		if (access(filename, F_OK))
-		{
-			shell()->exit_code = 1;
 			write(STDERR_FILENO, " No such file or directory\n", 27);
-		}
 		return (open(filename, O_RDONLY));
 	}
 	else if (mode == APPEND)
 	{
 		if (access(filename, W_OK))
-		{
-			shell()->exit_code = 1;
-			write(STDERR_FILENO, " No such file or directory\n", 27);
-		}
+			write(STDERR_FILENO, " Permission denied\n", 19);
 		return (open(filename, O_RDWR | O_CREAT | O_APPEND, 0644));
 	}
 	else
 	{
 		if (access(filename, W_OK))
-		{
-			shell()->exit_code = 1;
-			write(STDERR_FILENO, " No such file or directory\n", 27);
-		}
+			write(STDERR_FILENO, " Permission denied\n", 19);
 		return (open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644));
 	}
-	return (-2);
 }
-
 void	open_reds(t_seg *cmd)
 {
 	int	i;
 
 	cmd->std.in = -1;
 	cmd->std.out = -1;
+	cmd->red_error = 0;
 	if (cmd->here || cmd->in)
 	{
 		if (cmd->heredoc)
@@ -68,9 +58,10 @@ void	open_reds(t_seg *cmd)
 					close(cmd->std.in);
 				if (cmd->std.in == -1)
 				{
-					strerror(errno);
-					return ;
+					cmd->red_error = 1;
+					break ;
 				}
+				i++;
 			}
 		}
 	}
@@ -85,6 +76,11 @@ void	open_reds(t_seg *cmd)
 				cmd->std.out = file_ctl(cmd->out[i], OUTFILE);
 			if (cmd->out[i + 1])
 				close(cmd->std.out);
+			if (cmd->std.out == -1)
+			{
+				cmd->red_error = 1;
+				break ;
+			}
 			i++;
 		}
 	}
@@ -94,7 +90,7 @@ void	process_ctl(t_list *curr, char **env)
 {
 	t_seg	*cmd;
 	t_seg	*next;
-	
+
 	cmd = curr->content;
 	next = NULL;
 	if (curr->next)
@@ -115,7 +111,7 @@ void	process_ctl(t_list *curr, char **env)
 			dup2(cmd->pipe_fd[1], STDOUT_FILENO);
 		close(cmd->pipe_fd[1]);
 		if (cmd->builtin)
-			is_built_in(cmd->cmd);
+			execute_builtin(cmd->cmd, cmd->red_error);
 		else
 			execute(cmd->cmd, env);
 		free_all(true, true, true, true);
@@ -139,15 +135,12 @@ void	executeCommandList(t_list *seg_list)
 	t_list	*current;
 
 	current = seg_list;
-	while (current)
-	{
-		open_reds(current->content);
-		current = current->next;
-	}
-	current = seg_list;
 	while (current != NULL)
 	{
-		process_ctl(current, shell()->env);
+		if (!((t_seg *)current->content)->red_error)
+			process_ctl(current, shell()->env);
+		if (!current->next && ((t_seg *)current->content)->red_error)
+			shell()->exit_code = 1;
 		current = current->next;
 	}
 	current = seg_list;

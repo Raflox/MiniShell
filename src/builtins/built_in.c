@@ -6,14 +6,16 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 10:06:42 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/14 13:38:18 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 12:19:39 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	is_built_in(char **cmd)
+void	execute_builtin(char **cmd, int seg_error)
 {
+	if (seg_error != 0)
+		return ;
 	if (!ft_strcmp(cmd[0], "cd"))
 		cd(cmd);
 	else if (!ft_strcmp(cmd[0], "echo"))

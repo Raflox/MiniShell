@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/20 16:37:17 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 12:20:20 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	run_single_builtin(t_seg *seg)
 
 	in = -1;
 	out = -1;
-	open_reds(seg);
 	if (seg->std.in != -1)
 	{
 		in = dup(STDIN_FILENO);
@@ -40,7 +39,7 @@ void	run_single_builtin(t_seg *seg)
 		dup2(seg->std.out, STDOUT_FILENO);
 		close(seg->std.out);
 	}
-	is_built_in(seg->cmd);
+	execute_builtin(seg->cmd, seg->red_error);
 	if (in != -1)
 	{
 		dup2(in, STDIN_FILENO);
@@ -80,20 +79,17 @@ int	mainctl(int ac, char **av)
 	return (1);
 }
 
-void	run(t_sh *sh)
+void	run(t_list *lst)
 {
-	t_list	*lst;
 	t_seg	*seg;
 
-	lst = sh->segment_lst;
-	seg = lst->content;
-	if (seg->builtin && !sh->error && !lst->next)
+	if (!lst)
+		return ;
+	seg = (t_seg *)lst->content;
+	if (seg->builtin && !lst->next)
 		run_single_builtin(seg);
 	else
-	{
-		if (!sh->error)
-			executeCommandList(shell()->segment_lst);
-	}
+		executeCommandList(lst);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -116,7 +112,8 @@ int	main(int ac, char **av, char **envp)
 			add_history(sh_line);
 			parse(sh_line);
 			//print_array(((t_seg *)shell()->segment_lst->content)->in);
-			run(shell());
+			if (!shell()->error)
+				run(shell()->segment_lst);
 			free_all(0, 1, 0, 0);
 		}
 	}

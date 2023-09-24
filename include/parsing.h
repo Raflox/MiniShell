@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/22 11:08:42 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/24 21:14:53 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ struct s_seg
 	pid_t	pid;
 	char	**cmd;
 	char	**red;
+	char	**red_flags;
 	char	**in;
 	char	**out;
 	char	**here;
@@ -75,5 +76,6 @@ void	parse_segment_conditions(char *str, char **new_str, int *curr_pos);
 
 //exit_utils.c
 void	readline_error(char *error, int code, bool need_free);
+void	expand_variable(char *old_str, char **new_str, int *curr_pos);
 
 #endif

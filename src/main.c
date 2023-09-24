@@ -6,7 +6,7 @@
 /*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/22 21:17:19 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/24 22:10:00 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ int	main(int ac, char **av, char **envp)
 		{
 			add_history(sh_line);
 			parse(sh_line);
-			//print_array(((t_seg *)shell()->segment_lst->content)->cmd);
 			if (!shell()->error)
 				run(shell()->segment_lst);
 			free_all(0, 1, 0, 0);

@@ -6,7 +6,7 @@
 /*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/22 18:24:35 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/24 22:35:57 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	process_ctl(t_list *curr, char **env)
 	}
 	else
 	{
-		if (next && next->cmd && !next->in)
+		if (next && next->cmd && next->std.in == -1)
 			next->std.in = dup(cmd->pipe_fd[0]);
 		if (cmd->std.in != -1)
 			close(cmd->std.in);

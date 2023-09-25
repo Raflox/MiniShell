@@ -6,7 +6,7 @@
 /*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/24 22:35:57 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/24 22:48:43 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	process_ctl(t_list *curr, char **env)
 		{
 			if (cmd && cmd->builtin)
 				execute_builtin(cmd->cmd, cmd->red_error);
-			else
+			else if (cmd->cmd)
 				execute(cmd->cmd, env);
 		}
 		free_all(1, 1, 1, 1);

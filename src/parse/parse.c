@@ -6,7 +6,7 @@
 /*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/24 22:19:42 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/24 23:36:29 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,14 @@ void	get_heredoc(t_list *lst)
 	}
 }
 
+void	display_error(char *str)
+{
+	(void)str;
+	write(STDERR_FILENO, "Error: ", ft_strlen("Error: "));
+	write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+	write(STDERR_FILENO, "\n", ft_strlen("\n"));
+}
+
 //TODO verificar o tamanho das funções
 void	get_reds(t_list *lst)
 {
@@ -181,18 +189,28 @@ void	get_reds(t_list *lst)
 				{
 					if (seg->std.out != -1)
 						close(seg->std.out);
-					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_APPEND, 0644);
+					seg->std.out = open(&seg->red[i][2], O_RDWR | O_CREAT | O_APPEND, 0644);
+					if (seg->std.out == -1)
+					{
+						seg->red_error = 1;
+						break;
+					}
 				}
 				else if (seg->red[i][0] == '>' && seg->red[i][1] != '>')
 				{
 					if (seg->std.out != -1)
 						close(seg->std.out);
 					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+					if (seg->std.out == -1)
+					{
+						seg->red_error = 1;
+						break;
+					}
 				}
 			}
 		}
 		if (seg->red_error == 1)
-			write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
+			display_error("ola");
 		temp = temp->next;
 	}
 }
@@ -250,7 +268,6 @@ void	parse(char *input)
 	while (parse_input[++i])
 		ft_lstadd_back(&head, get_segment(parse_input[i]));
 	free_array(&parse_input);
-	//parse_segments(head);
 	shell()->segment_lst = head;
 	init_built_in_flag(shell()->segment_lst);
 	get_heredoc(shell()->segment_lst);

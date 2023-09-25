@@ -10,7 +10,7 @@ NAME = minishell
 
 #Compiler flags
 CC = @cc
-CFLAGS = -Wall -Wextra -Werror -I$(INC) -g -fsanitize=address,undefined
+CFLAGS = -Wall -Wextra -Werror -I$(INC) -g #-fsanitize=address,undefined
 LDFLAGS= -L /opt/homebrew/opt/readline/lib -I /opt/homebrew/opt/readline/include -lreadline
 RM = @rm -rf
 

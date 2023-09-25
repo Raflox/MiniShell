@@ -6,7 +6,7 @@
 /*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/24 22:10:00 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/24 23:36:53 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,6 @@ void	run_single_builtin(t_seg *seg)
 		dup2(out, STDOUT_FILENO);
 		close(out);
 	}
-}
-
-void	display_error(char *prefix)
-{
-	char	*error_str;
-
-	error_str = strerror(errno);
-	if (prefix)
-		printf("%s", prefix);
-	write(2, error_str, ft_strlen(error_str));
-	shell()->exit_code = errno;
 }
 
 void	display_custom_error(char *str, int exit_code)

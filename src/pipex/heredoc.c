@@ -6,55 +6,78 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 22:29:16 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/20 15:55:37 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/26 18:40:32 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	sigint_handler_here(int n)
+void	heredoc_error(char *str)
 {
-	(void) n;
-	exit(130);
+	printf("\nWarning: heredoc on line 1 delimited by EOF (wanted: \"%s\")\n", str);
+	handle_signals();
 }
 
-void	signals_here(int number)
+void	sig_here(int a)
 {
-	if (number == 0)
-	{
-		//signal(SIGQUIT, sigint_handler_here);
-		signal(SIGINT, sigint_handler_here);
-	}
+	(void)a;
+	free_all(1, 1, 1, 0);
+	close(shell()->here_fd[0]);
+	close(shell()->here_fd[1]);
+	exit(EXIT_FAILURE);
 }
 
 int	heredoc(t_seg *cmd)
 {
 	char	*line;
-	int		pipe_fd[2];
+	pid_t	pid;
 	int		i;
 
-	//signals_here(0);
-	if (pipe(pipe_fd) < 0)
+	shell()->here_fd[0] = -1;
+	shell()->here_fd[1] = -1;
+	shell()->in_heredoc = true;
+	if (pipe(shell()->here_fd) < 0)
 		perror("");
+	pid = fork();
 	i = 0;
-	line = NULL; 
-	while (cmd->here && cmd->here[i])
+	line = NULL;
+	if (pid == 0)
 	{
-		while (true)
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, sig_here);
+		while (cmd->here && cmd->here[i])
 		{
-			write(0, ">", 1);
-			line = get_next_line(0);
-			if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
-				break ;
-			if (cmd->here[i + 1] == NULL)
-				write(pipe_fd[1], line, ft_strlen(line));
-			free(line);
-			line = NULL;
+			while (true)
+			{
+				write(0, "> ", 2);
+				line = get_next_line(0);
+				if (!line)
+				{
+					heredoc_error(cmd->here[i]);
+					close(shell()->here_fd[1]);
+					close(shell()->here_fd[0]);
+					free_all(1, 1, 1, 0);
+					exit(-1);
+				}
+				if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
+					break ;
+				if (cmd->here[i + 1] == NULL)
+					write(shell()->here_fd[1], line, ft_strlen(line));
+				free(line);
+				line = NULL;
+			}
+			i++;
 		}
-		i++;
+		if (line)
+			free(line);
+		handle_signals();
+		close(shell()->here_fd[1]);
+		close (shell()->here_fd[0]);
+		free_all(1, 1, 1, 0);
+		exit(0);
 	}
-	if (line)
-		free(line);
-	close(pipe_fd[1]);
-	return (pipe_fd[0]);
+	close(shell()->here_fd[1]);
+	wait(0);
+	shell()->in_heredoc = false;
+	return (shell()->here_fd[0]);
 }

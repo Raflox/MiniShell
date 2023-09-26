@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/24 22:48:43 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 17:53:07 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,15 @@ void	process_ctl(t_list *curr, char **env)
 		else if (next && next->cmd)
 			dup2(cmd->pipe_fd[1], STDOUT_FILENO);
 		close(cmd->pipe_fd[1]);
-		if (!cmd->red_error)
+		if (cmd->red_error != 1)
 		{
 			if (cmd && cmd->builtin)
 				execute_builtin(cmd->cmd, cmd->red_error);
 			else if (cmd->cmd)
 				execute(cmd->cmd, env);
 		}
-		free_all(1, 1, 1, 1);
+		free_all(1, 1, 1, 0);
+		exit(shell()->exit_code);
 	}
 	else
 	{

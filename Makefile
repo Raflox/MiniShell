@@ -19,7 +19,7 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/main.c  src/signals.c  src/builtins/echo.c  src/builtins/unset.c  src/parse/parseSegments.c            src/parse/utils_exit.c  src/parse/utils_str.c    src/utils/utils0.c \
+SRC			=	src/main.c  src/signals.c  src/builtins/echo.c  src/builtins/unset.c      src/parse/utils_exit.c  src/parse/utils_str.c    src/utils/utils0.c \
 src/builtins/cd.c        src/builtins/pwd.c   src/parse/parse.c     src/parse/parseSegmentsConditions.c  src/parse/utils_is.c    src/utils/debug_utils.c  src/utils/utils1.c 	src/builtins/built_in.c	src/builtins/env/env.c src/builtins/env/get_env.c src/builtins/export.c src/builtins/exit.c\
 src/pipex/executor.c	src/pipex/utils.c src/pipex/heredoc.c
 

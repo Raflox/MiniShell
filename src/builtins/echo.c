@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:49:41 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/22 21:27:20 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 15:36:32 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,5 @@ void	echo(char **cmd)
 	}
 	if (!flag)
 		printf("\n");
-	return ;
+	shell()->exit_code = 0;
 }

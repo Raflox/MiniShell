@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 21:57:13 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/22 15:13:09 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 15:36:21 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,5 @@ void	cd(char **cmd)
 		}
 	}
 	update_pwd_var();
+	shell()->exit_code = 0;
 }

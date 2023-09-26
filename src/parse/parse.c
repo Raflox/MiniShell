@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/24 23:36:29 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 18:44:01 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*parse_word(char *seg, int *curr_pos)
 		(*curr_pos)++;
 	}
 	if (seg[*curr_pos] == '\0' && quote)
-		printf("nao da handle as quotes\n");
+		display_error(1, "Minishell doesn't handle quotes", true);
 	return (str);
 }
 
@@ -82,7 +82,7 @@ char	*parse_red(char *seg, int *curr_pos)
 		}
 	}
 	else
-		printf("grande erro nas reds\n");
+		display_error(1, "Syntax Error", true);
 	free(red);
 	return (final);
 }
@@ -125,7 +125,7 @@ t_list	*get_segment(char *input_seg)
 	return (ft_lstnew((t_seg *)new_seg));
 }
 
-void	get_heredoc(t_list *lst)
+int	get_heredoc(t_list *lst)
 {
 	t_list	*temp;
 	t_seg	*seg;
@@ -139,22 +139,14 @@ void	get_heredoc(t_list *lst)
 		while (seg->red && seg->red[++i])
 		{
 			if (seg->red[i][0] == '<' && seg->red[i][1] == '<')
-			{
 				add_str_to_array(&seg->here, &seg->red[i][2]);
-				if (seg->red[i + 1] == NULL)
-					seg->heredoc = true;
-			}
 		}
+		if (seg->red && seg->red[i + 1] == NULL)
+			seg->std.in = heredoc(seg);
+		else
+			close(heredoc(seg));
 		temp = temp->next;
 	}
-}
-
-void	display_error(char *str)
-{
-	(void)str;
-	write(STDERR_FILENO, "Error: ", ft_strlen("Error: "));
-	write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
-	write(STDERR_FILENO, "\n", ft_strlen("\n"));
 }
 
 //TODO verificar o tamanho das funções
@@ -163,7 +155,7 @@ void	get_reds(t_list *lst)
 	t_list	*temp;
 	t_seg	*seg;
 	int		i;
-
+get_reds(shell()->segment_lst);
 	temp = lst;
 	while (temp)
 	{
@@ -177,7 +169,6 @@ void	get_reds(t_list *lst)
 					close(seg->std.in);
 				if (access(&seg->red[i][1], F_OK))
 				{
-					write(STDERR_FILENO, &seg->red[i][1], ft_strlen(&seg->red[i][1]));
 					seg->red_error = 1;
 					break ;
 				}
@@ -185,32 +176,35 @@ void	get_reds(t_list *lst)
 			}
 			else
 			{
+				if (seg->std.out != -1)
+					close(seg->std.out);
 				if (seg->red[i][0] == '>' && seg->red[i][1] == '>')
 				{
-					if (seg->std.out != -1)
-						close(seg->std.out);
 					seg->std.out = open(&seg->red[i][2], O_RDWR | O_CREAT | O_APPEND, 0644);
 					if (seg->std.out == -1)
 					{
 						seg->red_error = 1;
-						break;
+						break ;
 					}
 				}
 				else if (seg->red[i][0] == '>' && seg->red[i][1] != '>')
 				{
-					if (seg->std.out != -1)
-						close(seg->std.out);
 					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 					if (seg->std.out == -1)
 					{
 						seg->red_error = 1;
-						break;
+						break ;
 					}
 				}
 			}
 		}
-		if (seg->red_error == 1)
-			display_error("ola");
+		if (seg->red_error)
+		{
+			if (seg->red[i][0] == '>')
+				display_error(1, " Permission denied", false);
+			else
+				display_error(1, " No such file or directory", false);
+		}
 		temp = temp->next;
 	}
 }
@@ -249,19 +243,12 @@ void	init_built_in_flag(t_list *lst)
 	}
 }
 
-void	run_away(char *str)
-{
-	printf("run_away: %s\n", str);
-	shell()->error = true;
-}
-
 void	parse(char *input)
 {
 	t_list	*head;
 	char	**parse_input;
 	int		i;
 
-	shell()->error = false;
 	parse_input = split_and_trim((find_and_replace(input, "|", 1)), 1);
 	head = NULL;
 	i = -1;
@@ -270,6 +257,9 @@ void	parse(char *input)
 	free_array(&parse_input);
 	shell()->segment_lst = head;
 	init_built_in_flag(shell()->segment_lst);
-	get_heredoc(shell()->segment_lst);
-	get_reds(shell()->segment_lst);
+	if (!shell()->error)
+	{
+		get_heredoc(shell()->segment_lst);
+		get_reds(shell()->segment_lst);
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/24 21:14:53 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 17:58:49 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ struct s_seg
 {
 	bool	builtin;
 	bool	heredoc;
-	bool	red_error;
+	int		red_error;
 	pid_t	pid;
 	char	**cmd;
 	char	**red;
@@ -67,12 +67,6 @@ void	add_c_to_string(char **str, char c);
 
 //debug_utils.c
 void	print_lst(t_list *lst);
-
-//parse_segments.c
-void	parse_segments(t_list *lst);
-
-//parse_segments_conditions.c
-void	parse_segment_conditions(char *str, char **new_str, int *curr_pos);
 
 //exit_utils.c
 void	readline_error(char *error, int code, bool need_free);

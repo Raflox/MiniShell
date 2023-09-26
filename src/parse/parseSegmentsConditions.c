@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parseSegmentsConditions.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/24 18:03:14 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 17:42:36 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include <minishell.h>
 
-static int	skip_quote(char *str, char **new_str, char quote, int *curr_pos);
 
 int	get_variable_size(char *str)
 {
@@ -105,49 +104,4 @@ void	expand_variable(char *old_str, char **new_str, int *curr_pos)
 	else
 		add_c_to_string(new_str, '$');
 	(*curr_pos)--;
-}
-
-/*
-**	Function: skip_quote
-**	---------------------------------
-**	This function skip all the quoted content and
-**	give an error when quotes arent closed
-
-**	Parameters:
-**		input:		input string.
-**		quote:		char ' or " that was is that position.
-**		curr_pos:	current position on string.
-
-**	Return:
-**		Non.
-*/
-static int	skip_quote(char *str, char **new_str, char quote, int *curr_pos)
-{
-	while (str[++(*curr_pos)])
-	{
-		if (quote == '\"' && str[*curr_pos] == '$')
-			expand_variable(str, new_str, curr_pos);
-		if (str[*curr_pos] == quote)
-		{
-			(*curr_pos)++;
-			return (1);
-		}
-		if (str[*curr_pos] == '\0')
-			break ;
-		add_c_to_string(new_str, str[*curr_pos]);
-	}
-	return (0);
-}
-
-void	parse_segment_conditions(char *str, char **new_str, int *curr_pos)
-{
-	if (is_quote(str[*curr_pos]))
-	{
-		if (!skip_quote(str, new_str, str[*curr_pos], curr_pos))
-			readline_error("minishel: doens't interpret unclosed quotes", 0, 0);
-	}
-	else if (str[*curr_pos] == '$')
-		expand_variable(str, new_str, curr_pos);
-	else
-		add_c_to_string(new_str, str[(*curr_pos)++]);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:34 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/25 08:38:52 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 16:36:51 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,18 @@ static char	*find_path(char **envp, char *cmd)
 	char	*path;
 	char	*temp;
 	char	**paths;
+	int		i;
 
 	path = NULL;
 	temp = NULL;
 	paths = NULL;
-	i = 0;
 	if (!envp || !envp[0])
 		return (ft_strdup(cmd));
 	index = find_env_path(envp);
 	if (index == -1)
 		return (NULL);
-	path = find_env_path(envp);
+	path = &envp[index][6];
 	paths = ft_split(path, ':');
-	free (path);
 	i = 0;
 	while (paths[i])
 	{
@@ -66,17 +65,38 @@ static char	*find_path(char **envp, char *cmd)
 	return (ft_strdup(cmd));
 }
 
+void	error_before_execute(char *path)
+{
+	struct stat	st;
+	
+	stat(path, &st);
+	if (S_ISDIR(st.st_mode) && (!ft_strncmp("./", path, 2) || path[0] == '/'))
+	{
+		display_error(126, " Is a directory", true);
+		free_all(1, 1, 1, 1);
+	}
+}
+
 void	execute(char **cmd, char **envp)
 {
 	char	*path;
 
 	path = find_path(envp, cmd[0]);
+	error_before_execute(path);
 	if (execve(path, cmd, envp) == -1)
 	{
-		if (errno == EISDIR)
-			write(STDERR_FILENO, "Is a Directory", ft_strlen("Is a Directory"));
+		if (errno == 14)
+		{
+			display_error(127, " command not found", true);
+		}
+		else if (errno == 13)
+		{
+			if (access(cmd[0], X_OK) && !ft_strncmp("./", cmd[0], 2))
+				display_error(126," No such file or directory", true);
+			else
+				display_error(127," No such file or directory", true);
+		}
 		else
-			write(STDERR_FILENO, strerror(errno), ft_strlen(strerror(errno)));
-		shell()->exit_code = 127;
+			display_error(127," command not found", true);
 	}
 }

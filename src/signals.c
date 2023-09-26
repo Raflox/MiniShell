@@ -6,34 +6,41 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:14:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/20 15:32:00 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/26 18:41:25 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include <minishell.h>
 
-void	sigint_handler(int n)
+void	ft_handler(int sig)
 {
-	(void) n;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+	pid_t	pid;
+	int		status;
 
-void	sigquit_handler(int n)
-{
-	(void) n;
-	rl_redisplay();
-	//rl_on_new_line();
-}
-
-
-void	signals(int number)
-{
-	if (number == 0)
+	pid = waitpid(-1, &status, 0);
+	if (sig == SIGINT)
 	{
-		signal(SIGINT, sigint_handler);
-		signal(SIGQUIT, sigquit_handler);
+		if (pid == -1)
+		{
+			ft_putstr_fd("^C\n", 2);
+        	rl_on_new_line();
+        	rl_replace_line("", 0);
+        	rl_redisplay();
+		}
+		else
+			printf("\n");
 	}
+	else if (sig == SIGQUIT)
+	{
+		if (pid != -1)
+		{
+			ft_putstr_fd("Quit: 3\n", 2);
+		}
+	}
+}
+
+void    handle_signals(void)
+{
+    signal(SIGINT, ft_handler);
+    signal(SIGQUIT, ft_handler);
 }

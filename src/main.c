@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/24 23:36:53 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 18:00:02 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	init_shell(t_sh *sh, char **envp)
 	sh->segment_lst = NULL;
 	sh->env = get_env(envp);
 	sh->exit_code = 0;
+	shell()->in_heredoc = false;
 }
 
 void	run_single_builtin(t_seg *seg)
@@ -86,16 +87,20 @@ int	main(int ac, char **av, char **envp)
 	char	*sh_line;
 
 	(void)av;
+	rl_catch_signals = 0;
+	handle_signals();
 	if (ac != 1)
 		return (0);
 	shell()->prompt = true;
 	init_shell(shell(), envp);
-	signals(0);
 	while (shell()->prompt)
 	{
 		sh_line = readline("msh> ");
 		if (!sh_line)
-			free_all(1, 0, 1, 1);
+		{
+			free_all(1, 0, 1, 0);
+			exit(0);
+		}
 		if (sh_line[0] != '\n' || sh_line[0] != '\0')
 		{
 			add_history(sh_line);

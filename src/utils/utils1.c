@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/22 22:03:11 by parallels        ###   ########.fr       */
+/*   Updated: 2023/09/26 15:26:53 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+void	display_error(int e_code, char *str, bool error)
+{
+	if (str)
+		ft_putendl_fd(str, STDERR_FILENO);
+	else
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+	if (error)
+		shell()->error = true;
+	shell()->exit_code = e_code;
+}
 
 void	free_lst(t_list *temp)
 {
@@ -43,6 +54,7 @@ void	free_lst(t_list *temp)
 
 void	free_all(bool free_env, bool free_cmd_lst, bool close_std_files, bool f_exit)
 {
+	shell()->error = false;
 	if (free_env == true)
 		free_array(&shell()->env);
 	if (free_cmd_lst == true)

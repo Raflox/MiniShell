@@ -1,98 +1,65 @@
-==260272== Memcheck, a memory error detector
-==260272== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==260272== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==260272== Command: ./minishell
-==260272== 
-Permission denied==260282== 
-==260282== FILE DESCRIPTORS: 5 open at exit.
-==260282== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
-==260282==    <inherited from parent>
-==260282== 
-==260282== Open file descriptor 39: /dev/ptmx
-==260282==    <inherited from parent>
-==260282== 
-==260282== Open file descriptor 38: /usr/share/code/resources/app/node_modules.asar
-==260282==    <inherited from parent>
-==260282== 
-==260282== Open AF_UNIX socket 37: <unknown>
-==260282==    <inherited from parent>
-==260282== 
-==260282== Open file descriptor 36: /home/parallels/.config/Code/logs/20230922T142730/ptyhost.log
-==260282==    <inherited from parent>
-==260282== 
-==260282== 
-==260282== HEAP SUMMARY:
-==260282==     in use at exit: 204,756 bytes in 219 blocks
-==260282==   total heap usage: 944 allocs, 725 frees, 239,210 bytes allocated
-==260282== 
-==260282== LEAK SUMMARY:
-==260282==    definitely lost: 0 bytes in 0 blocks
-==260282==    indirectly lost: 0 bytes in 0 blocks
-==260282==      possibly lost: 0 bytes in 0 blocks
-==260282==    still reachable: 0 bytes in 0 blocks
-==260282==         suppressed: 204,756 bytes in 219 blocks
-==260282== 
-==260282== For lists of detected and suppressed errors, rerun with: -s
-==260282== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==260283== 
-==260283== FILE DESCRIPTORS: 5 open at exit.
-==260283== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
-==260283==    <inherited from parent>
-==260283== 
-==260283== Open file descriptor 39: /dev/ptmx
-==260283==    <inherited from parent>
-==260283== 
-==260283== Open file descriptor 38: /usr/share/code/resources/app/node_modules.asar
-==260283==    <inherited from parent>
-==260283== 
-==260283== Open AF_UNIX socket 37: <unknown>
-==260283==    <inherited from parent>
-==260283== 
-==260283== Open file descriptor 36: /home/parallels/.config/Code/logs/20230922T142730/ptyhost.log
-==260283==    <inherited from parent>
-==260283== 
-==260283== 
-==260283== HEAP SUMMARY:
-==260283==     in use at exit: 204,756 bytes in 219 blocks
-==260283==   total heap usage: 944 allocs, 725 frees, 239,210 bytes allocated
-==260283== 
-==260283== LEAK SUMMARY:
-==260283==    definitely lost: 0 bytes in 0 blocks
-==260283==    indirectly lost: 0 bytes in 0 blocks
-==260283==      possibly lost: 0 bytes in 0 blocks
-==260283==    still reachable: 0 bytes in 0 blocks
-==260283==         suppressed: 204,756 bytes in 219 blocks
-==260283== 
-==260283== For lists of detected and suppressed errors, rerun with: -s
-==260283== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==260272== 
-==260272== FILE DESCRIPTORS: 5 open at exit.
-==260272== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
-==260272==    <inherited from parent>
-==260272== 
-==260272== Open file descriptor 39: /dev/ptmx
-==260272==    <inherited from parent>
-==260272== 
-==260272== Open file descriptor 38: /usr/share/code/resources/app/node_modules.asar
-==260272==    <inherited from parent>
-==260272== 
-==260272== Open AF_UNIX socket 37: <unknown>
-==260272==    <inherited from parent>
-==260272== 
-==260272== Open file descriptor 36: /home/parallels/.config/Code/logs/20230922T142730/ptyhost.log
-==260272==    <inherited from parent>
-==260272== 
-==260272== 
-==260272== HEAP SUMMARY:
-==260272==     in use at exit: 204,756 bytes in 219 blocks
-==260272==   total heap usage: 947 allocs, 728 frees, 239,230 bytes allocated
-==260272== 
-==260272== LEAK SUMMARY:
-==260272==    definitely lost: 0 bytes in 0 blocks
-==260272==    indirectly lost: 0 bytes in 0 blocks
-==260272==      possibly lost: 0 bytes in 0 blocks
-==260272==    still reachable: 0 bytes in 0 blocks
-==260272==         suppressed: 204,756 bytes in 219 blocks
-==260272== 
-==260272== For lists of detected and suppressed errors, rerun with: -s
-==260272== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 1 from 1)
+==867444== Memcheck, a memory error detector
+==867444== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==867444== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==867444== Command: ./minishell
+==867444== 
+==867444== Invalid read of size 8
+==867444==    at 0x402D53: get_heredoc (parse.c:144)
+==867444==    by 0x403329: parse (parse.c:262)
+==867444==    by 0x4015ED: main (main.c:107)
+==867444==  Address 0x4b1bcc0 is 0 bytes after a block of size 16 alloc'd
+==867444==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==867444==    by 0x401FA5: create_array (utils_str.c:101)
+==867444==    by 0x401E96: add_str_to_array (utils_str.c:151)
+==867444==    by 0x402BE9: get_segment (parse.c:111)
+==867444==    by 0x4032CF: parse (parse.c:256)
+==867444==    by 0x4015ED: main (main.c:107)
+==867444== 
+==867454== 
+==867454== FILE DESCRIPTORS: 0 open at exit.
+==867454== 
+==867454== HEAP SUMMARY:
+==867454==     in use at exit: 204,648 bytes in 219 blocks
+==867454==   total heap usage: 708 allocs, 489 frees, 232,931 bytes allocated
+==867454== 
+==867454== LEAK SUMMARY:
+==867454==    definitely lost: 0 bytes in 0 blocks
+==867454==    indirectly lost: 0 bytes in 0 blocks
+==867454==      possibly lost: 0 bytes in 0 blocks
+==867454==    still reachable: 0 bytes in 0 blocks
+==867454==         suppressed: 204,648 bytes in 219 blocks
+==867454== 
+==867454== For lists of detected and suppressed errors, rerun with: -s
+==867454== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==867459== 
+==867459== FILE DESCRIPTORS: 0 open at exit.
+==867459== 
+==867459== HEAP SUMMARY:
+==867459==     in use at exit: 204,648 bytes in 219 blocks
+==867459==   total heap usage: 708 allocs, 489 frees, 232,931 bytes allocated
+==867459== 
+==867459== LEAK SUMMARY:
+==867459==    definitely lost: 0 bytes in 0 blocks
+==867459==    indirectly lost: 0 bytes in 0 blocks
+==867459==      possibly lost: 0 bytes in 0 blocks
+==867459==    still reachable: 0 bytes in 0 blocks
+==867459==         suppressed: 204,648 bytes in 219 blocks
+==867459== 
+==867459== For lists of detected and suppressed errors, rerun with: -s
+==867459== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==867444== 
+==867444== FILE DESCRIPTORS: 0 open at exit.
+==867444== 
+==867444== HEAP SUMMARY:
+==867444==     in use at exit: 204,648 bytes in 219 blocks
+==867444==   total heap usage: 711 allocs, 492 frees, 232,951 bytes allocated
+==867444== 
+==867444== LEAK SUMMARY:
+==867444==    definitely lost: 0 bytes in 0 blocks
+==867444==    indirectly lost: 0 bytes in 0 blocks
+==867444==      possibly lost: 0 bytes in 0 blocks
+==867444==    still reachable: 0 bytes in 0 blocks
+==867444==         suppressed: 204,648 bytes in 219 blocks
+==867444== 
+==867444== For lists of detected and suppressed errors, rerun with: -s
+==867444== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 1 from 1)

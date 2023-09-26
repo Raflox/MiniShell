@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 12:53:41 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/26 18:11:51 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ typedef struct s_sh
 	t_list	*segment_lst;
 	char	**env;
 	int		exit_code;
+	bool	in_heredoc;
+	int		here_fd[2];
 }	t_sh;
 
 // -----------------------------  FUNCTIONS --------------------------------- //
@@ -48,6 +50,7 @@ typedef struct s_sh
 t_sh	*shell(void);
 
 //signals.c
-void	signals(int number);
+void    handle_signals(void);
+void	display_error(int e_code, char *str, bool error);
 
 #endif

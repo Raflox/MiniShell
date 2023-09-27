@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/26 18:44:01 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 11:56:38 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	end_word(char c, char quote)
 	return (0);
 }
 
-char	*parse_word(char *seg, int *curr_pos)
+char	*parse_word(char *seg, int *curr_pos, char *red)
 {
 	char	*str;
 	char	quote;
@@ -47,7 +47,7 @@ char	*parse_word(char *seg, int *curr_pos)
 			quote = seg[*curr_pos];
 		else if (is_quote(seg[*curr_pos]) && quote == seg[(*curr_pos)])
 			quote = 0;
-		else if ((!quote || (quote && quote == '"')) && seg[*curr_pos] == '$')
+		else if ((!quote || (quote && quote == '"')) && seg[*curr_pos] == '$' && ft_strcmp(red, "<<") != 0)
 			expand_variable(seg, &str, curr_pos);
 		else
 			add_c_to_string(&str, seg[*curr_pos]);
@@ -74,7 +74,7 @@ char	*parse_red(char *seg, int *curr_pos)
 		(*curr_pos)++;
 	if (seg[(*curr_pos)] && !is_greatorless(seg[(*curr_pos)]))
 	{
-		temp = parse_word(seg, curr_pos);
+		temp = parse_word(seg, curr_pos, red);
 		if (temp)
 		{
 			final = ft_strjoin(red, temp);
@@ -114,7 +114,7 @@ t_list	*get_segment(char *input_seg)
 		}
 		else
 		{
-			temp = parse_word(input_seg, &i);
+			temp = parse_word(input_seg, &i, NULL);
 			if (temp)
 			{
 				add_str_to_array(&new_seg->cmd, temp);
@@ -136,17 +136,27 @@ int	get_heredoc(t_list *lst)
 	{
 		seg = (t_seg *)temp->content;
 		i = -1;
+		seg->heredoc = false;
 		while (seg->red && seg->red[++i])
 		{
 			if (seg->red[i][0] == '<' && seg->red[i][1] == '<')
+			{
 				add_str_to_array(&seg->here, &seg->red[i][2]);
+				if (seg->red[i + 1] == NULL)
+					seg->heredoc = true;
+			}
 		}
-		if (seg->red && seg->red[i + 1] == NULL)
+		if (seg->here && seg->heredoc)
+		{
 			seg->std.in = heredoc(seg);
-		else
+			if (seg->std.in == -1)
+				return (1);
+		}
+		else if (seg->here)
 			close(heredoc(seg));
 		temp = temp->next;
 	}
+	return (0);
 }
 
 //TODO verificar o tamanho das funções
@@ -155,7 +165,7 @@ void	get_reds(t_list *lst)
 	t_list	*temp;
 	t_seg	*seg;
 	int		i;
-get_reds(shell()->segment_lst);
+
 	temp = lst;
 	while (temp)
 	{
@@ -165,14 +175,15 @@ get_reds(shell()->segment_lst);
 		{
 			if (seg->red[i][0] == '<' && seg->red[i][1] != '<')
 			{
-				if (seg->std.in != -1)
+				if (seg->std.in != -1 && !seg->heredoc)
 					close(seg->std.in);
 				if (access(&seg->red[i][1], F_OK))
 				{
 					seg->red_error = 1;
 					break ;
 				}
-				seg->std.in = open(&seg->red[i][1], O_RDONLY);
+				if (!seg->heredoc)
+					seg->std.in = open(&seg->red[i][1], O_RDONLY);
 			}
 			else
 			{
@@ -243,12 +254,42 @@ void	init_built_in_flag(t_list *lst)
 	}
 }
 
+int	pipe_sintax(char *input)
+{
+	int	i;
+
+	if (!input)
+		return (0);
+	i = 0;
+	while (input[i] && is_space(input[i]))
+		i++;
+	if (input[i] == '|')
+	{
+		display_error(1, "Syntax Error", false);
+		return (1);
+	}
+	i = ft_strlen(input) - 1;
+	while (input[i] && is_space(input[i]))
+		i--;
+	if (input[i] == '|')
+	{
+		display_error(1, "Syntax Error", false);
+		return (1);
+	}
+	return (0);
+}
+
 void	parse(char *input)
 {
 	t_list	*head;
 	char	**parse_input;
 	int		i;
 
+	// if (pipe_sintax(input))
+	// {
+	// 	shell()->error = true;
+	// 	return ;
+	// }
 	parse_input = split_and_trim((find_and_replace(input, "|", 1)), 1);
 	head = NULL;
 	i = -1;
@@ -259,7 +300,11 @@ void	parse(char *input)
 	init_built_in_flag(shell()->segment_lst);
 	if (!shell()->error)
 	{
-		get_heredoc(shell()->segment_lst);
+		if (get_heredoc(shell()->segment_lst))
+		{
+			shell()->error = true;
+			return ;
+		}
 		get_reds(shell()->segment_lst);
 	}
 }

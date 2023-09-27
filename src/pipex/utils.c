@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:34 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/26 16:36:51 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 12:04:10 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,9 @@ void	error_before_execute(char *path)
 {
 	struct stat	st;
 	
-	stat(path, &st);
-	if (S_ISDIR(st.st_mode) && (!ft_strncmp("./", path, 2) || path[0] == '/'))
+	if (stat(path, &st) == -1)
+		return ;
+	if (S_ISDIR(st.st_mode) && path && (!ft_strncmp("./", path, 2) || path[0] == '/'))
 	{
 		display_error(126, " Is a directory", true);
 		free_all(1, 1, 1, 1);
@@ -99,4 +100,5 @@ void	execute(char **cmd, char **envp)
 		else
 			display_error(127," command not found", true);
 	}
+	free(path);
 }

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/26 17:42:36 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 09:43:53 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,7 @@ void	expand_variable(char *old_str, char **new_str, int *curr_pos)
 
 	(*curr_pos)++;
 	if (ft_isdigit(old_str[(*curr_pos)]))
-	{
 		return ;
-	}
 	start = (*curr_pos);
 	while (old_str[(*curr_pos)] && !end_variable(old_str[(*curr_pos)]))
 		(*curr_pos)++;

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 22:29:16 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/26 18:40:32 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 12:09:35 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,29 @@ void	sig_here(int a)
 	free_all(1, 1, 1, 0);
 	close(shell()->here_fd[0]);
 	close(shell()->here_fd[1]);
+	shell()->error = true;
 	exit(EXIT_FAILURE);
+}
+
+void	heredoc_expand_variable(char **line)
+{
+	char	*temp;
+	int		i;
+
+	temp = NULL;
+	if (!(*line))
+		return ;
+	i = 0;
+	while ((*line)[i])
+	{
+		if ((*line)[i] == '$')
+			expand_variable(*line, &temp, &i);
+		else
+			add_c_to_string(&temp, (*line)[i]);
+		i++;
+	}
+	free(*line);
+	*line = temp;
 }
 
 int	heredoc(t_seg *cmd)
@@ -33,8 +55,6 @@ int	heredoc(t_seg *cmd)
 	pid_t	pid;
 	int		i;
 
-	shell()->here_fd[0] = -1;
-	shell()->here_fd[1] = -1;
 	shell()->in_heredoc = true;
 	if (pipe(shell()->here_fd) < 0)
 		perror("");
@@ -60,16 +80,20 @@ int	heredoc(t_seg *cmd)
 					exit(-1);
 				}
 				if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
+				{
+					free(line);
 					break ;
+				}
 				if (cmd->here[i + 1] == NULL)
+				{
+					heredoc_expand_variable(&line);
 					write(shell()->here_fd[1], line, ft_strlen(line));
+				}
 				free(line);
 				line = NULL;
 			}
 			i++;
 		}
-		if (line)
-			free(line);
 		handle_signals();
 		close(shell()->here_fd[1]);
 		close (shell()->here_fd[0]);
@@ -77,7 +101,7 @@ int	heredoc(t_seg *cmd)
 		exit(0);
 	}
 	close(shell()->here_fd[1]);
-	wait(0);
+	wait(&pid);
 	shell()->in_heredoc = false;
 	return (shell()->here_fd[0]);
 }

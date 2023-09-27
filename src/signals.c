@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:14:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/26 18:41:25 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 12:12:30 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_handler(int sig)
 	{
 		if (pid == -1)
 		{
-			ft_putstr_fd("^C\n", 2);
+			ft_putstr_fd("^C\n", 0);
         	rl_on_new_line();
         	rl_replace_line("", 0);
         	rl_redisplay();

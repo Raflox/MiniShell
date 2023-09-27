@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/26 18:00:02 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 11:08:57 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	init_shell(t_sh *sh, char **envp)
 	sh->segment_lst = NULL;
 	sh->env = get_env(envp);
 	sh->exit_code = 0;
-	shell()->in_heredoc = false;
+	sh->in_heredoc = false;
 }
 
 void	run_single_builtin(t_seg *seg)

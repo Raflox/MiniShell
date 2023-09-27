@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/18 21:51:05 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:30:29 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	//init_shell();
-	signals(0);
+	rl_catch_signals = 0;
+	handle_signals();
 	shell()->prompt = true;
 	shell()->exit_code = 0;
 	shell()->env = get_env(envp);

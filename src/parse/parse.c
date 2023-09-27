@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 11:56:38 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 18:27:42 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,20 @@ char	*parse_word(char *seg, int *curr_pos, char *red)
 {
 	char	*str;
 	char	quote;
+	char	was_q;
+	char	start;
 
 	str = NULL;
+	was_q = false;
 	quote = 0;
+	start = *curr_pos;
 	while (seg[*curr_pos] && !end_word(seg[*curr_pos], quote))
 	{
 		if (is_quote(seg[*curr_pos]) && !quote)
+		{
 			quote = seg[*curr_pos];
+			was_q = true;
+		}
 		else if (is_quote(seg[*curr_pos]) && quote == seg[(*curr_pos)])
 			quote = 0;
 		else if ((!quote || (quote && quote == '"')) && seg[*curr_pos] == '$' && ft_strcmp(red, "<<") != 0)
@@ -55,6 +62,8 @@ char	*parse_word(char *seg, int *curr_pos, char *red)
 	}
 	if (seg[*curr_pos] == '\0' && quote)
 		display_error(1, "Minishell doesn't handle quotes", true);
+	if (!str && was_q)
+		str = ft_calloc(1, 1);
 	return (str);
 }
 
@@ -99,7 +108,7 @@ t_list	*get_segment(char *input_seg)
 		return (NULL);
 	new_seg->builtin = false;
 	init_seg(new_seg);
-	while (input_seg[i])
+	while (input_seg[i] && !shell()->error)
 	{
 		if (is_space(input_seg[i]))
 			i++;
@@ -142,9 +151,10 @@ int	get_heredoc(t_list *lst)
 			if (seg->red[i][0] == '<' && seg->red[i][1] == '<')
 			{
 				add_str_to_array(&seg->here, &seg->red[i][2]);
-				if (seg->red[i + 1] == NULL)
-					seg->heredoc = true;
+				seg->heredoc = true;
 			}
+			else if (seg->red[i][0] == '<')
+				seg->heredoc = false;
 		}
 		if (seg->here && seg->heredoc)
 		{
@@ -153,7 +163,10 @@ int	get_heredoc(t_list *lst)
 				return (1);
 		}
 		else if (seg->here)
-			close(heredoc(seg));
+		{
+			if (close(heredoc(seg)) == -1)
+				return (1);
+		}
 		temp = temp->next;
 	}
 	return (0);
@@ -183,7 +196,14 @@ void	get_reds(t_list *lst)
 					break ;
 				}
 				if (!seg->heredoc)
+				{
 					seg->std.in = open(&seg->red[i][1], O_RDONLY);
+					if (seg->std.in == -1)
+					{
+						seg->red_error = 1;
+						break ;
+					}
+				}
 			}
 			else
 			{
@@ -209,13 +229,8 @@ void	get_reds(t_list *lst)
 				}
 			}
 		}
-		if (seg->red_error)
-		{
-			if (seg->red[i][0] == '>')
-				display_error(1, " Permission denied", false);
-			else
-				display_error(1, " No such file or directory", false);
-		}
+		if (seg->red_error == 1)
+			display_error(1, strerror(errno), false);
 		temp = temp->next;
 	}
 }
@@ -254,28 +269,53 @@ void	init_built_in_flag(t_list *lst)
 	}
 }
 
+int	pip_between(char *input)
+{
+	int		i;
+	char	quote;
+	char	last_c;
+
+	i = 0;
+	last_c = 0;
+	while (input[i])
+	{
+		if (is_quote(input[i]))
+		{
+			quote = input[i++];
+			while (input[i] && input[i] != quote)
+				i++;
+			if (input[i++] != quote)
+				return (0);
+			last_c = 0;
+		}
+		else if (is_space(input[i]))
+			i++;
+		else if (last_c == '|' && input[i] == '|')
+			return (1);
+		else
+			last_c = input[i++];
+	}
+	return (0);
+}
+
 int	pipe_sintax(char *input)
 {
 	int	i;
 
-	if (!input)
+	if (!input || !(*input))
 		return (0);
 	i = 0;
 	while (input[i] && is_space(input[i]))
 		i++;
 	if (input[i] == '|')
-	{
-		display_error(1, "Syntax Error", false);
 		return (1);
-	}
 	i = ft_strlen(input) - 1;
 	while (input[i] && is_space(input[i]))
 		i--;
 	if (input[i] == '|')
-	{
-		display_error(1, "Syntax Error", false);
 		return (1);
-	}
+	if (pip_between(input))
+		return (1);
 	return (0);
 }
 
@@ -285,13 +325,15 @@ void	parse(char *input)
 	char	**parse_input;
 	int		i;
 
-	// if (pipe_sintax(input))
-	// {
-	// 	shell()->error = true;
-	// 	return ;
-	// }
-	parse_input = split_and_trim((find_and_replace(input, "|", 1)), 1);
 	head = NULL;
+	if (pipe_sintax(input))
+	{
+		display_error(1, "Syntax Error", false);
+		shell()->segment_lst = head;
+		shell()->error = true;
+		return ;
+	}
+	parse_input = split_and_trim((find_and_replace(input, "|", 1)), 1);
 	i = -1;
 	while (parse_input[++i])
 		ft_lstadd_back(&head, get_segment(parse_input[i]));

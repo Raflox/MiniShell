@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 11:08:57 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 18:39:44 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ void	run_single_builtin(t_seg *seg)
 
 	in = -1;
 	out = -1;
+	if (seg->red_error == 1)
+	{
+		display_error(1, NULL, true);
+		return ;
+	}
 	if (seg->std.in != -1)
 	{
 		in = dup(STDIN_FILENO);
@@ -111,5 +116,6 @@ int	main(int ac, char **av, char **envp)
 		}
 	}
 	free_all(1, 0, 1, 0);
+	printf("\n");
 	return (shell()->exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/26 15:26:53 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:54:32 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void	free_all(bool free_env, bool free_cmd_lst, bool close_std_files, bool f_exi
 	if (free_env == true)
 		free_array(&shell()->env);
 	if (free_cmd_lst == true)
-		free_lst(shell()->segment_lst);
+	{
+		if (shell()->segment_lst)
+			free_lst(shell()->segment_lst);
+	}
 	if (close_std_files == true)
 	{
 		close(2);

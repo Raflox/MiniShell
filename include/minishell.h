@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/26 18:11:51 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:01:50 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_sh
 	int		exit_code;
 	bool	in_heredoc;
 	int		here_fd[2];
+	bool	in_exec;
 }	t_sh;
 
 // -----------------------------  FUNCTIONS --------------------------------- //

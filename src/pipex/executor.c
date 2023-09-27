@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/27 12:04:56 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:02:36 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	process_ctl(t_list *curr, char **env)
 	if (curr->next)
 		next = curr->next->content;
 	pipe(cmd->pipe_fd);
+	shell()->in_exec = true;
 	cmd->pid = fork();
 	if (cmd->pid == 0)
 	{
@@ -42,7 +43,11 @@ void	process_ctl(t_list *curr, char **env)
 		if (cmd->red_error != 1)
 		{
 			if (cmd && cmd->builtin)
+			{
 				execute_builtin(cmd->cmd, cmd->red_error);
+				free_all(1, 1, 1, 0);
+				exit(0);
+			}
 			else if (cmd->cmd)
 				execute(cmd->cmd, env);
 		}
@@ -59,6 +64,7 @@ void	process_ctl(t_list *curr, char **env)
 			close(cmd->std.out);
 		close(cmd->pipe_fd[0]);
 		close(cmd->pipe_fd[1]);
+		// printf("%d\n", shell()->exit_code);
 	}
 }
 
@@ -82,6 +88,7 @@ void	executeCommandList(t_list *seg_list)
 		waitpid(((t_seg *)current->content)->pid, &status, 0);
 		current = current->next;
 	}
+	shell()->in_exec = false;
 	if (WIFEXITED(status))
 		shell()->exit_code = WEXITSTATUS(status);
 }

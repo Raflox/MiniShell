@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 21:57:13 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/18 15:47:37 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/26 15:36:21 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,21 +70,49 @@ void	update_pwd_var(void)
 	free(new_pwd);
 }
 
+int	cd_home(void)
+{
+	int		i;
+
+	i = find_var(shell()->env, "HOME");
+	if (i != -1)
+	{
+		if (chdir(&shell()->env[i][5]) == -1)
+		{
+			perror("Error:");
+			shell()->exit_code = 1;
+			return (-1);
+		}
+		return (0);
+	}
+	printf("var Home disabled\n");
+	return (-1);
+}
+
 void	cd(char **cmd)
 {
-	if (!cmd || ft_strcmp(cmd[0], "cd"))
-		return ;
-	if (cmd[2])
+	int		i;
+
+	i = 0;
+	while (cmd[i])
+		i++;
+	if (i == 1)
+		cd_home();
+	else if (i > 2)
 	{
 		write(STDERR_FILENO, " too many arguments\n", 20);
 		shell()->exit_code = 1;
 		return ;
 	}
-	if (chdir(cmd[1]) == -1)
+	else
 	{
-		perror("Error:");
-		shell()->exit_code = 1;
-		return ;
+		if (chdir(cmd[1]) == -1)
+		{
+			perror("Error:");
+			shell()->exit_code = 1;
+			return ;
+		}
 	}
 	update_pwd_var();
+	shell()->exit_code = 0;
 }

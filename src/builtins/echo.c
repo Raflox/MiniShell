@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:49:41 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/14 13:20:41 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/26 15:36:32 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	skip_echo_flags(char **cmd, bool *flag)
 		if (cmd[i][0] != '-')
 			return (i);
 		j = 1;
+		if (cmd[i][1] == '\0')
+			return (i);
 		while (cmd[i][j])
 		{
 			if (cmd[i][j] != 'n')
@@ -54,4 +56,5 @@ void	echo(char **cmd)
 	}
 	if (!flag)
 		printf("\n");
+	shell()->exit_code = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:22:34 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/18 23:09:52 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 15:48:19 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,44 +14,91 @@
 
 // TODO:	ADD FUNCTION TO CLEAN AND CLOSE UPON ERROR?
 
+static int	find_env_path(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], "PATH=", 5))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
 static char	*find_path(char **envp, char *cmd)
 {
-	int		i;
+	int		index;
 	char	*path;
 	char	*temp;
 	char	**paths;
+	int		i;
 
-	i = 0;
-	while (!ft_strnstr(envp[i], "PATH", 4))
-		i++;
-	path = ft_substr(envp[i], 5, ft_strlen(envp[i]));
+	path = NULL;
+	temp = NULL;
+	paths = NULL;
+	if (!envp || !envp[0])
+		return (ft_strdup(cmd));
+	index = find_env_path(envp);
+	if (index == -1)
+		return (NULL);
+	path = &envp[index][6];
 	paths = ft_split(path, ':');
-	free (path);
 	i = 0;
 	while (paths[i])
 	{
 		temp = ft_strjoin(paths[i], "/");
 		path = ft_strjoin(temp, cmd);
 		if (access(path, F_OK) != -1)
+		{
+			free(temp);
+			free_array(&paths);
 			return (path);
+		}
 		free(temp);
 		free(path);
 		i++;
 	}
 	free_array(&paths);
-	return (cmd);
+	return (ft_strdup(cmd));
+}
+
+void	error_before_execute(char *path)
+{
+	struct stat	st;
+	
+	if (stat(path, &st) == -1)
+		return ;
+	if (S_ISDIR(st.st_mode) && path && (!ft_strncmp("./", path, 2) || path[0] == '/'))
+	{
+		display_error(126, " Is a directory", true);
+		free_all(1, 1, 1, 1);
+	}
 }
 
 void	execute(char **cmd, char **envp)
 {
 	char	*path;
 
-	if (!cmd)
-		exit(1);
 	path = find_path(envp, cmd[0]);
+	error_before_execute(path);
 	if (execve(path, cmd, envp) == -1)
 	{
-		write(STDERR_FILENO, " command not found\n", 19);
-		shell()->exit_code = 127;
+		if (errno == 14)
+		{
+			display_error(127, " command not found", true);
+		}
+		else if (errno == 13)
+		{
+			if (access(cmd[0], X_OK) && !ft_strncmp("./", cmd[0], 2))
+				display_error(126," No such file or directory", true);
+			else
+				display_error(127," No such file or directory", true);
+		}
+		else
+			display_error(127," command not found", true);
 	}
+	free(path);
 }

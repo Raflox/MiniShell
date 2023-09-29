@@ -6,55 +6,102 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 22:29:16 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/20 15:55:37 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 12:09:35 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	sigint_handler_here(int n)
+void	heredoc_error(char *str)
 {
-	(void) n;
-	exit(130);
+	printf("\nWarning: heredoc on line 1 delimited by EOF (wanted: \"%s\")\n", str);
+	handle_signals();
 }
 
-void	signals_here(int number)
+void	sig_here(int a)
 {
-	if (number == 0)
+	(void)a;
+	free_all(1, 1, 1, 0);
+	close(shell()->here_fd[0]);
+	close(shell()->here_fd[1]);
+	shell()->error = true;
+	exit(EXIT_FAILURE);
+}
+
+void	heredoc_expand_variable(char **line)
+{
+	char	*temp;
+	int		i;
+
+	temp = NULL;
+	if (!(*line))
+		return ;
+	i = 0;
+	while ((*line)[i])
 	{
-		//signal(SIGQUIT, sigint_handler_here);
-		signal(SIGINT, sigint_handler_here);
+		if ((*line)[i] == '$')
+			expand_variable(*line, &temp, &i);
+		else
+			add_c_to_string(&temp, (*line)[i]);
+		i++;
 	}
+	free(*line);
+	*line = temp;
 }
 
 int	heredoc(t_seg *cmd)
 {
 	char	*line;
-	int		pipe_fd[2];
+	pid_t	pid;
 	int		i;
 
-	//signals_here(0);
-	if (pipe(pipe_fd) < 0)
+	shell()->in_heredoc = true;
+	if (pipe(shell()->here_fd) < 0)
 		perror("");
+	pid = fork();
 	i = 0;
-	line = NULL; 
-	while (cmd->here[i])
+	line = NULL;
+	if (pid == 0)
 	{
-		while (true)
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, sig_here);
+		while (cmd->here && cmd->here[i])
 		{
-			write(0, ">", 1);
-			line = get_next_line(0);
-			if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
-				break ;
-			if (cmd->here[i + 1] == NULL)
-				write(pipe_fd[1], line, ft_strlen(line));
-			free(line);
-			line = NULL;
+			while (true)
+			{
+				write(0, "> ", 2);
+				line = get_next_line(0);
+				if (!line)
+				{
+					heredoc_error(cmd->here[i]);
+					close(shell()->here_fd[1]);
+					close(shell()->here_fd[0]);
+					free_all(1, 1, 1, 0);
+					exit(-1);
+				}
+				if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
+				{
+					free(line);
+					break ;
+				}
+				if (cmd->here[i + 1] == NULL)
+				{
+					heredoc_expand_variable(&line);
+					write(shell()->here_fd[1], line, ft_strlen(line));
+				}
+				free(line);
+				line = NULL;
+			}
+			i++;
 		}
-		i++;
+		handle_signals();
+		close(shell()->here_fd[1]);
+		close (shell()->here_fd[0]);
+		free_all(1, 1, 1, 0);
+		exit(0);
 	}
-	if (line)
-		free(line);
-	close(pipe_fd[1]);
-	return (pipe_fd[0]);
+	close(shell()->here_fd[1]);
+	wait(&pid);
+	shell()->in_heredoc = false;
+	return (shell()->here_fd[0]);
 }

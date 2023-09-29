@@ -6,12 +6,12 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 22:36:36 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/14 13:24:48 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/22 12:19:06 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILT_IN_H
-#define BUILT_IN_H
+# define BUILT_IN_H
 
 // ------------------------------- INCLUDES --------------------------------- //
 
@@ -28,7 +28,7 @@ void	env(char **cmd);
 void	export(char	**cmd);
 void	unset(char	**cmd);
 void	ft_exit(char **cmd);
-void	is_built_in(char **cmd);
+void	execute_builtin(char **cmd, int seg_error);
 
 //env/utils
 void	rm_str_from_array(char ***array, int index);

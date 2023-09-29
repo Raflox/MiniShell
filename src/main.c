@@ -6,16 +6,19 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:09:40 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/20 16:37:17 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 18:39:44 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	init_shell(void)
+void	init_shell(t_sh *sh, char **envp)
 {
-	shell()->segment_lst = 0;
-	//shell()->vars->env = *envp;
+	sh->error = false;
+	sh->segment_lst = NULL;
+	sh->env = get_env(envp);
+	sh->exit_code = 0;
+	sh->in_heredoc = false;
 }
 
 void	run_single_builtin(t_seg *seg)
@@ -25,7 +28,11 @@ void	run_single_builtin(t_seg *seg)
 
 	in = -1;
 	out = -1;
-	open_fds_2(seg);
+	if (seg->red_error == 1)
+	{
+		display_error(1, NULL, true);
+		return ;
+	}
 	if (seg->std.in != -1)
 	{
 		in = dup(STDIN_FILENO);
@@ -38,47 +45,77 @@ void	run_single_builtin(t_seg *seg)
 		dup2(seg->std.out, STDOUT_FILENO);
 		close(seg->std.out);
 	}
-	is_built_in(seg->cmd);
-	dup2(in, STDIN_FILENO);
-	dup2(out, STDOUT_FILENO);
-	close(in);
-	close(out);
+	execute_builtin(seg->cmd, seg->red_error);
+	if (in != -1)
+	{
+		dup2(in, STDIN_FILENO);
+		close(in);
+	}
+	if (out != -1)
+	{
+		dup2(out, STDOUT_FILENO);
+		close(out);
+	}
+}
+
+void	display_custom_error(char *str, int exit_code)
+{
+	if (str != NULL)
+		write(2, str, ft_strlen(str));
+	if (exit_code == -1)
+		shell()->exit_code = errno;
+}
+
+int	mainctl(int ac, char **av)
+{
+	(void)av;
+	if (ac != 1)
+		return (0);
+	return (1);
+}
+
+void	run(t_list *lst)
+{
+	t_seg	*seg;
+
+	if (!lst)
+		return ;
+	seg = (t_seg *)lst->content;
+	if (seg->builtin && !lst->next)
+		run_single_builtin(seg);
+	else
+		executeCommandList(lst);
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	char	*sh_line;
 
-	(void)ac;
 	(void)av;
-	//init_shell();
-	signals(0);
+	rl_catch_signals = 0;
+	handle_signals();
+	if (ac != 1)
+		return (0);
 	shell()->prompt = true;
-	shell()->exit_code = 0;
-	shell()->env = get_env(envp);
+	init_shell(shell(), envp);
 	while (shell()->prompt)
 	{
 		sh_line = readline("msh> ");
 		if (!sh_line)
 		{
-			free_all();
-			return (0);
+			free_all(1, 0, 1, 0);
+			exit(0);
 		}
-		if (sh_line[0] != '\n')
+		if (sh_line[0] != '\n' || sh_line[0] != '\0')
 		{
 			add_history(sh_line);
 			parse(sh_line);
-			//print_array(((t_seg *)shell()->segment_lst->content)->cmd);
-			if (((t_seg *)shell()->segment_lst->content)->builtin
-				&& !shell()->error && !shell()->segment_lst->next)
-				run_single_builtin(shell()->segment_lst->content);
-			else
-			{
-				if (!shell()->error)
-					executeCommandList(shell()->segment_lst);
-			}
-			free_seg();
+			if (!shell()->error)
+				run(shell()->segment_lst);
+			free_all(0, 1, 0, 0);
 		}
 	}
+	free_all(1, 0, 1, 0);
+	printf("\n");
 	return (shell()->exit_code);
 }

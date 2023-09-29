@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/14 12:53:41 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:01:50 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <signal.h>
 # include <limits.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdbool.h>
@@ -35,14 +36,14 @@
 
 typedef struct s_sh
 {
-	bool	error;
 	bool	prompt;
+	bool	error;
 	t_list	*segment_lst;
 	char	**env;
-	char	**export;
-	char	*oldpwd;
-	char	*pwd;
 	int		exit_code;
+	bool	in_heredoc;
+	int		here_fd[2];
+	bool	in_exec;
 }	t_sh;
 
 // -----------------------------  FUNCTIONS --------------------------------- //
@@ -50,6 +51,7 @@ typedef struct s_sh
 t_sh	*shell(void);
 
 //signals.c
-void	signals(int number);
+void    handle_signals(void);
+void	display_error(int e_code, char *str, bool error);
 
 #endif

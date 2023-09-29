@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/20 10:13:08 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/26 17:58:49 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,22 @@ struct	s_std
 {
 	int	in;
 	int	out;
-	int	err;
 };
 
 struct s_seg
 {
-	bool	heredoc;
-	int		idx;
-	pid_t	pid;
 	bool	builtin;
+	bool	heredoc;
+	int		red_error;
+	pid_t	pid;
 	char	**cmd;
 	char	**red;
-	char	*in;
-	bool	append;
-	char	**here;
+	char	**red_flags;
+	char	**in;
 	char	**out;
+	char	**here;
+	bool	append;
 	int		pipe_fd[2];
-	int		dup_fd[2];
 	t_std	std;
 };
 
@@ -69,13 +68,8 @@ void	add_c_to_string(char **str, char c);
 //debug_utils.c
 void	print_lst(t_list *lst);
 
-//parse_segments.c
-void	parse_segments(t_list *lst);
-
-//parse_segments_conditions.c
-void	parse_segment_conditions(char *str, char **new_str, int *curr_pos);
-
 //exit_utils.c
 void	readline_error(char *error, int code, bool need_free);
+void	expand_variable(char *old_str, char **new_str, int *curr_pos);
 
 #endif

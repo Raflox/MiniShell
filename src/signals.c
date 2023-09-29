@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:14:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 10:08:47 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:18:57 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ void	ft_handler(int sig)
 	}
 }
 
-void    handle_signals(void)
+void	handle_signals(void)
 {
-    signal(SIGINT, ft_handler);
-    signal(SIGQUIT, ft_handler);
+	signal(SIGINT, ft_handler);
+	signal(SIGQUIT, ft_handler);
 }

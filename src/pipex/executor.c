@@ -3,14 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:55:04 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/27 16:02:36 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:29:10 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+void	exec_child(t_seg *cmd, t_seg *next, char **env)
+{
+	if (cmd->std.in != -1)
+	{
+		dup2(cmd->std.in, STDIN_FILENO);
+		close(cmd->std.in);
+	}
+	close(cmd->pipe_fd[0]);
+	if (cmd->std.out != -1)
+	{
+		dup2(cmd->std.out, STDOUT_FILENO);
+		close(cmd->std.out);
+	}
+	else if (next && next->cmd)
+		dup2(cmd->pipe_fd[1], STDOUT_FILENO);
+	close(cmd->pipe_fd[1]);
+	if (cmd->red_error != 1)
+	{
+		if (cmd && cmd->builtin)
+		{
+			execute_builtin(cmd->cmd, cmd->red_error);
+			free_all(1, 1, 1, 0);
+			exit(0);
+		}
+		else if (cmd->cmd)
+			execute(cmd->cmd, env);
+	}
+}
 
 void	process_ctl(t_list *curr, char **env)
 {
@@ -26,49 +55,21 @@ void	process_ctl(t_list *curr, char **env)
 	cmd->pid = fork();
 	if (cmd->pid == 0)
 	{
-		if (cmd->std.in != -1)
-		{
-			dup2(cmd->std.in, STDIN_FILENO);
-			close(cmd->std.in);
-		}
-		close(cmd->pipe_fd[0]);
-		if (cmd->std.out != -1)
-		{
-			dup2(cmd->std.out, STDOUT_FILENO);
-			close(cmd->std.out);
-		}
-		else if (next && next->cmd)
-			dup2(cmd->pipe_fd[1], STDOUT_FILENO);
-		close(cmd->pipe_fd[1]);
-		if (cmd->red_error != 1)
-		{
-			if (cmd && cmd->builtin)
-			{
-				execute_builtin(cmd->cmd, cmd->red_error);
-				free_all(1, 1, 1, 0);
-				exit(0);
-			}
-			else if (cmd->cmd)
-				execute(cmd->cmd, env);
-		}
+		exec_child(cmd, next, env);
 		free_all(1, 1, 1, 0);
 		exit(shell()->exit_code);
 	}
-	else
-	{
-		if (next && next->cmd && next->std.in == -1)
-			next->std.in = dup(cmd->pipe_fd[0]);
-		if (cmd->std.in != -1)
-			close(cmd->std.in);
-		if (cmd->std.out != -1)
-			close(cmd->std.out);
-		close(cmd->pipe_fd[0]);
-		close(cmd->pipe_fd[1]);
-		// printf("%d\n", shell()->exit_code);
-	}
+	if (next && next->cmd && next->std.in == -1)
+		next->std.in = dup(cmd->pipe_fd[0]);
+	if (cmd->std.in != -1)
+		close(cmd->std.in);
+	if (cmd->std.out != -1)
+		close(cmd->std.out);
+	close(cmd->pipe_fd[0]);
+	close(cmd->pipe_fd[1]);
 }
 
-void	executeCommandList(t_list *seg_list)
+void	execute_cmd_lst(t_list *seg_list)
 {
 	int		status;
 	t_list	*current;

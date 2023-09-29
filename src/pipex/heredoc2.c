@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_exit.c                                       :+:      :+:    :+:   */
+/*   heredoc2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/28 14:49:20 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 10:19:25 by rafilipe         ###   ########.fr       */
+/*   Created: 2023/09/29 10:59:22 by rafilipe          #+#    #+#             */
+/*   Updated: 2023/09/29 10:59:51 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include <minishell.h>
 
-void	free_lst_content(t_list *lst)
+void	heredoc_error(char *str)
 {
-	t_list	*temp;
-	t_seg	*seg;
-
-	temp = lst;
-	while (temp)
-	{
-		seg = (t_seg *)temp->content;
-		free_array(&seg->cmd);
-		free_array(&seg->red);
-		temp = temp->next;
-	}
+	printf("\nWarning: heredoc on line 1 delimited by EOF (wanted: \"%s\")\n", str);
+	handle_signals();
 }
 
-void	readline_error(char *error, int code, bool need_free)
+void	sig_here(int a)
 {
-	(void)code;
+	(void)a;
+	free_all(1, 1, 1, 0);
+	close(shell()->here_fd[0]);
+	close(shell()->here_fd[1]);
 	shell()->error = true;
-	printf("Error: %s\n", error);
-	if (need_free)
-		return ;
+	exit(EXIT_FAILURE);
 }

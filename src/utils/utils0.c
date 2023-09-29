@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 11:56:24 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:18:10 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	print_array(char **array)
 	int	i;
 
 	i = -1;
-    if (!array)
+	if (!array)
 		return ;
 	while (array[++i])
 		printf("%s\n", array[i]);

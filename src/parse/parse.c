@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 10:00:51 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 12:55:30 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,91 +233,7 @@ void	get_reds(t_list *lst)
 	}
 }
 
-int	is_builtin(char *str)
-{
-	if (ft_strcmp(str, "export") == 0 || ft_strcmp(str, "env") == 0)
-		return (1);
-	else if (ft_strcmp(str, "echo") == 0 || ft_strcmp(str, "unset") == 0)
-		return (1);
-	else if (ft_strcmp(str, "cd") == 0 || ft_strcmp(str, "pwd") == 0)
-		return (1);
-	else if (ft_strcmp(str, "exit") == 0)
-		return (1);
-	return (0);
-}
-
-void	init_built_in_flag(t_list *lst)
-{
-	t_list	*temp;
-	t_seg	*seg;
-	int		i;
-
-	temp = lst;
-	while (temp)
-	{
-		seg = (t_seg *)temp->content;
-		seg->builtin = false;
-		i = -1;
-		while (seg->cmd && seg->cmd[++i])
-		{
-			if (is_builtin(seg->cmd[i]))
-				seg->builtin = true;
-		}
-		temp = temp->next;
-	}
-}
-
-int	pip_between(char *input)
-{
-	int		i;
-	char	quote;
-	char	last_c;
-
-	i = 0;
-	last_c = 0;
-	while (input[i])
-	{
-		if (is_quote(input[i]))
-		{
-			quote = input[i++];
-			while (input[i] && input[i] != quote)
-				i++;
-			if (input[i++] != quote)
-				return (0);
-			last_c = 0;
-		}
-		else if (is_space(input[i]))
-			i++;
-		else if (last_c == '|' && input[i] == '|')
-			return (1);
-		else
-			last_c = input[i++];
-	}
-	return (0);
-}
-
-int	pipe_sintax(char *input)
-{
-	int	i;
-
-	if (!input || !(*input))
-		return (0);
-	i = 0;
-	while (input[i] && is_space(input[i]))
-		i++;
-	if (input[i] == '|')
-		return (1);
-	i = ft_strlen(input) - 1;
-	while (input[i] && is_space(input[i]))
-		i--;
-	if (input[i] == '|')
-		return (1);
-	if (pip_between(input))
-		return (1);
-	return (0);
-}
-
-void	parse(char *input)
+int	parse(char *input)
 {
 	t_list	*head;
 	char	**parse_input;
@@ -329,7 +245,7 @@ void	parse(char *input)
 		display_error(1, "Syntax Error", false);
 		shell()->segment_lst = head;
 		shell()->error = true;
-		return ;
+		return (0);
 	}
 	parse_input = split_and_trim((find_and_replace(input, "|", 1)), 1);
 	i = -1;
@@ -343,8 +259,9 @@ void	parse(char *input)
 		if (get_heredoc(shell()->segment_lst))
 		{
 			shell()->error = true;
-			return ;
+			return (0);
 		}
 		get_reds(shell()->segment_lst);
 	}
+	return (0);
 }

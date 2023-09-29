@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 10:39:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 09:34:11 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 12:04:47 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,6 @@ t_sh	*shell(void);
 //signals.c
 void	handle_signals(void);
 void	display_error(int e_code, char *str, bool error);
+void	add_str_to_array(char ***array, char *str);
 
 #endif

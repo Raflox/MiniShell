@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:00:25 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 16:54:32 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:18:24 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	free_lst(t_list *temp)
 	}
 }
 
-void	free_all(bool free_env, bool free_cmd_lst, bool close_std_files, bool f_exit)
+void	free_all(bool free_env, bool free_cmd_lst, \
+		bool close_std_files, bool f_exit)
 {
 	shell()->error = false;
 	if (free_env == true)

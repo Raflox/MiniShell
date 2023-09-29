@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 15:24:11 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/26 10:57:32 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 11:00:38 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ void	execute(char **cmd, char **env);
 void	executor(t_seg *seg);
 
 //void executeCommand(t_seg *seg);
-void	executeCommandList(t_list *seg_list);
+void	execute_cmd_lst(t_list *seg_list);
 
 void	open_reds(t_seg *cmd);
 int		heredoc(t_seg *cmd);
+void	heredoc_error(char *str);
+void	sig_here(int a);
 
 #endif

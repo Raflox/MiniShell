@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 09:34:17 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 12:45:36 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ struct s_seg
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 
-void	parse(char *input);
+int		parse(char *input);
 
 /*
 **	parsing utils
@@ -70,5 +70,26 @@ void	print_lst(t_list *lst);
 //exit_utils.c
 void	readline_error(char *error, int code, bool need_free);
 void	expand_variable(char *old_str, char **new_str, int *curr_pos);
+
+//parse
+char	*parse_word(char *seg, int *curr_pos, char *red);
+
+//parse2.c
+int		pipe_sintax(char *input);
+int		pip_between(char *input);
+void	init_built_in_flag(t_list *lst);
+int		is_builtin(char *str);
+char	*parse_red(char *seg, int *curr_pos);
+
+//parse3.c
+void	init_seg(t_seg *seg);
+int		end_word(char c, char quote);
+void	get_reds(t_list *lst);
+int		get_reds_out(t_seg *seg, int i);
+int		get_reds_in(t_seg *seg, int i);
+
+//parse4.c
+void	get_seg_help(char *input_seg, int *curr_pos, char ***red);
+t_list	*get_segment(char *input_seg);
 
 #endif

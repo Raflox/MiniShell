@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parseSegmentsConditions.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 14:43:00 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 18:47:32 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:19:18 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
 
 int	get_variable_size(char *str)
 {

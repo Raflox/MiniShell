@@ -6,11 +6,19 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 13:17:41 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 13:27:22 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+void	parse_word_util(char c, char quote, char **str, bool was_q)
+{
+	if (c == '\0' && quote)
+		display_error(1, "Minishell doesn't handle quotes", true);
+	if (!(*str) && was_q)
+		*str = ft_calloc(1, 1);
+}
 
 char	*parse_word(char *seg, int *curr_pos, char *red)
 {
@@ -37,73 +45,8 @@ char	*parse_word(char *seg, int *curr_pos, char *red)
 			add_c_to_string(&str, seg[*curr_pos]);
 		(*curr_pos)++;
 	}
-	if (seg[*curr_pos] == '\0' && quote)
-		display_error(1, "Minishell doesn't handle quotes", true);
-	if (!str && was_q)
-		str = ft_calloc(1, 1);
+	parse_word_util(seg[*curr_pos], quote, &str, was_q);
 	return (str);
-}
-
-void	get_reds(t_list *lst)
-{
-	t_list	*temp;
-	t_seg	*seg;
-	int		i;
-
-	temp = lst;
-	while (temp)
-	{
-		seg = (t_seg *)temp->content;
-		i = -1;
-		while (seg->red && seg->red[++i])
-		{
-			if (seg->red[i][0] == '<' && seg->red[i][1] != '<')
-			{
-				if (seg->std.in != -1 && !seg->heredoc)
-					close(seg->std.in);
-				if (access(&seg->red[i][1], F_OK))
-				{
-					seg->red_error = 1;
-					break ;
-				}
-				if (!seg->heredoc)
-				{
-					seg->std.in = open(&seg->red[i][1], O_RDONLY);
-					if (seg->std.in == -1)
-					{
-						seg->red_error = 1;
-						break ;
-					}
-				}
-			}
-			else
-			{
-				if (seg->std.out != -1)
-					close(seg->std.out);
-				if (seg->red[i][0] == '>' && seg->red[i][1] == '>')
-				{
-					seg->std.out = open(&seg->red[i][2], O_RDWR | O_CREAT | O_APPEND, 0644);
-					if (seg->std.out == -1)
-					{
-						seg->red_error = 1;
-						break ;
-					}
-				}
-				else if (seg->red[i][0] == '>' && seg->red[i][1] != '>')
-				{
-					seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_TRUNC, 0644);
-					if (seg->std.out == -1)
-					{
-						seg->red_error = 1;
-						break ;
-					}
-				}
-			}
-		}
-		if (seg->red_error == 1)
-			display_error(1, strerror(errno), false);
-		temp = temp->next;
-	}
 }
 
 void	parse_util(char *input, t_list **head)
@@ -119,7 +62,6 @@ void	parse_util(char *input, t_list **head)
 	shell()->segment_lst = *head;
 	init_built_in_flag(shell()->segment_lst);
 }
-
 
 int	parse(char *input)
 {

@@ -1,0 +1,4 @@
+ola
+CC = @cc
+	@$(CC) $(CFLAGS) -o $(@) -I/usr/local/include $(LDFLAGS) $(^) $(LIBFT_A) -lreadline
+	@$(CC) $(CFLAGS) -c $(^) -o $(@)

@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 13:11:45 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 13:23:30 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,8 @@ t_list	*get_segment(char *input_seg);
 //parse4.c
 int		get_heredoc(t_list *lst);
 int		get_heredoc_2(t_seg *seg);
+int		get_reds_in(t_seg *seg, int i);
+int		get_reds_out(t_seg *seg, int i);
+void	get_reds(t_list *lst);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:14:24 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 16:08:24 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:08:47 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_handler(int sig)
 	if (sig == SIGINT)
 	{
 		shell()->exit_code = 130;
-		if (shell()->in_exec == true)
+		if (shell()->in_exec == true || shell()->in_heredoc)
 		{
 			printf("\n");
 			return ;

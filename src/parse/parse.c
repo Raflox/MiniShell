@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:04:39 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 18:27:42 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 10:00:51 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
 
 void	init_seg(t_seg *seg)
 {
@@ -39,12 +38,10 @@ char	*parse_word(char *seg, int *curr_pos, char *red)
 	char	*str;
 	char	quote;
 	char	was_q;
-	char	start;
 
 	str = NULL;
 	was_q = false;
 	quote = 0;
-	start = *curr_pos;
 	while (seg[*curr_pos] && !end_word(seg[*curr_pos], quote))
 	{
 		if (is_quote(seg[*curr_pos]) && !quote)
@@ -54,7 +51,8 @@ char	*parse_word(char *seg, int *curr_pos, char *red)
 		}
 		else if (is_quote(seg[*curr_pos]) && quote == seg[(*curr_pos)])
 			quote = 0;
-		else if ((!quote || (quote && quote == '"')) && seg[*curr_pos] == '$' && ft_strcmp(red, "<<") != 0)
+		else if ((!quote || (quote && quote == '"')) \
+			&& seg[*curr_pos] == '$' && ft_strcmp(red, "<<") != 0)
 			expand_variable(seg, &str, curr_pos);
 		else
 			add_c_to_string(&str, seg[*curr_pos]);

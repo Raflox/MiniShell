@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 12:29:53 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/20 16:44:06 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 09:38:58 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 size_t	str_len(const char *str)
 {
 	size_t	i;
-	
+
 	i = 0;
 	if (!str)
 		return (0);
@@ -47,30 +47,29 @@ static char	*ft_join(char *line, char *stash)
 	return (ret);
 }
 
-static int ft_nextclean(char *stash)
+static int	ft_nextclean(char *stash)
 {
-	int nl_flag = 0;
-	int i;
-	int j;
-	
-	i = 0;
+	int	nl_flag;
+	int	j;
+
 	j = 0;
-	while (stash[i])
+	nl_flag = 0;
+	while (*stash)
 	{
-		if (stash[i] == '\n')
+		if (*stash == '\n')
 		{
 			nl_flag = 1;
-			stash[i++] = 0;
-			break;
+			*stash++ = 0;
+			break ;
 		}
-		stash[i++] = 0;
+		*stash++ = 0;
 	}
-   	if (nl_flag)
+	if (nl_flag)
 	{
-		while (stash[i])
+		while (*stash)
 		{
-			stash[j++] = stash[i];
-			stash[i++] = 0;
+			stash[j++] = *stash;
+			*stash = 0;
 		}
 	}
 	return (nl_flag);
@@ -80,8 +79,8 @@ char	*get_next_line(int fd)
 {
 	static char	stash[BUFFER_SIZE + 1];
 	char		*line;
-	int 		i;
-	
+	int			i;
+
 	i = 0;
 	if (read(fd, 0, 0) < 0 || BUFFER_SIZE < 1)
 	{

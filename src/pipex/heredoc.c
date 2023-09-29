@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 22:29:16 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/27 12:09:35 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/09/29 09:39:27 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,13 @@ int	heredoc(t_seg *cmd)
 					free_all(1, 1, 1, 0);
 					exit(-1);
 				}
-				if (!(ft_strncmp(line, cmd->here[i], ft_strlen(cmd->here[i]))))
+				add_c_to_string(&cmd->here[i], 10);
+				if (!(ft_strcmp(line, cmd->here[i])))
 				{
 					free(line);
 					break ;
 				}
+				rm_last_c_from_str(&cmd->here[i]);
 				if (cmd->here[i + 1] == NULL)
 				{
 					heredoc_expand_variable(&line);

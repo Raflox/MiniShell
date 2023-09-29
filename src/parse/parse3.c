@@ -6,102 +6,72 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 12:24:56 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/29 12:55:55 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 13:11:23 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <minishell.h>
+#include <minishell.h>
 
-// void	init_seg(t_seg *seg)
-// {
-// 	seg->heredoc = false;
-// 	seg->red_error = 0;
-// 	seg->cmd = NULL;
-// 	seg->red = NULL;
-// 	seg->in = NULL;
-// 	seg->out = NULL;
-// 	seg->here = NULL;
-// 	seg->append = false;
-// 	seg->std.in = -1;
-// 	seg->std.out = -1;
-// }
+void	init_seg(t_seg *seg)
+{
+	seg->heredoc = false;
+	seg->red_error = 0;
+	seg->cmd = NULL;
+	seg->red = NULL;
+	seg->in = NULL;
+	seg->out = NULL;
+	seg->here = NULL;
+	seg->append = false;
+	seg->std.in = -1;
+	seg->std.out = -1;
+}
 
-// int	end_word(char c, char quote)
-// {
-// 	if ((is_greatorless(c) || is_space(c)) && !quote)
-// 		return (1);
-// 	return (0);
-// }
+int	end_word(char c, char quote)
+{
+	if ((is_greatorless(c) || is_space(c)) && !quote)
+		return (1);
+	return (0);
+}
 
-// int	get_reds_in(t_seg *seg, int i)
-// {
-// 	if (seg->std.in != -1 && !seg->heredoc)
-// 		close(seg->std.in);
-// 	if (access(&seg->red[i][1], F_OK))
-// 	{
-// 		seg->red_error = 1;
-// 		return (1);
-// 	}
-// 	if (!seg->heredoc)
-// 	{
-// 		seg->std.in = open(&seg->red[i][1], O_RDONLY);
-// 		if (seg->std.in == -1)
-// 		{
-// 			seg->red_error = 1;
-// 			return (1);
-// 		}
-// 	}
-// 	return (0);
-// }
+void	get_segment_util(char *input_seg, int *i, t_seg *new_seg)
+{
+	char	*temp;
 
-// int	get_reds_out(t_seg *seg, int i)
-// {
-// 	if (seg->std.out != -1)
-// 		close(seg->std.out);
-// 	if (seg->red[i][0] == '>' && seg->red[i][1] == '>')
-// 	{
-// 		seg->std.out = open(&seg->red[i][2], O_RDWR | O_CREAT | O_APPEND, 0644);
-// 		if (seg->std.out == -1)
-// 		{
-// 			seg->red_error = 1;
-// 			return (1);
-// 		}
-// 	}
-// 	else if (seg->red[i][0] == '>' && seg->red[i][1] != '>')
-// 	{
-// 		seg->std.out = open(&seg->red[i][1], O_RDWR | O_CREAT | O_TRUNC, 0644);
-// 		if (seg->std.out == -1)
-// 		{
-// 			seg->red_error = 1;
-// 			return (1);
-// 		}
-// 	}
-// 	return (0);
-// }
+	temp = NULL;
+	if (is_space(input_seg[*i]))
+		(*i)++;
+	else if (is_greatorless(input_seg[*i]))
+	{
+		temp = parse_red(input_seg, i);
+		if (temp)
+		{
+			add_str_to_array(&new_seg->red, temp);
+			free(temp);
+		}
+	}
+	else
+	{
+		temp = parse_word(input_seg, i, NULL);
+		if (temp)
+		{
+			add_str_to_array(&new_seg->cmd, temp);
+			free(temp);
+		}
+	}
+}
 
-// void	get_reds(t_list *lst)
-// {
-// 	t_list	*temp;
-// 	t_seg	*seg;
-// 	int		i;
+t_list	*get_segment(char *input_seg)
+{
+	t_seg	*new_seg;
+	int		i;
 
-// 	temp = lst;
-// 	while (temp)
-// 	{
-// 		seg = (t_seg *)temp->content;
-// 		i = -1;
-// 		while (seg->red && seg->red[++i])
-// 		{
-// 			if (seg->red[i][0] == '<' && seg->red[i][1] != '<')
-// 			{
-// 				if (get_reds_in(seg, i))
-// 					break ;
-// 			}
-// 			else if (get_reds_out(seg, i))
-// 				break ;
-// 		}
-// 		if (seg->red_error == 1)
-// 			display_error(1, strerror(errno), false);
-// 		temp = temp->next;
-// 	}
-// }
+	i = 0;
+	new_seg = malloc(sizeof(t_seg));
+	if (!new_seg)
+		return (NULL);
+	new_seg->builtin = false;
+	init_seg(new_seg);
+	while (input_seg[i] && !shell()->error)
+		get_segment_util(input_seg, &i, new_seg);
+	return (ft_lstnew((t_seg *)new_seg));
+}

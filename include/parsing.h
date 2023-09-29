@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 23:28:27 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/09/29 12:45:36 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 13:11:45 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,11 @@ char	*parse_red(char *seg, int *curr_pos);
 //parse3.c
 void	init_seg(t_seg *seg);
 int		end_word(char c, char quote);
-void	get_reds(t_list *lst);
-int		get_reds_out(t_seg *seg, int i);
-int		get_reds_in(t_seg *seg, int i);
+void	get_segment_util(char *input_seg, int *i, t_seg *new_seg);
+t_list	*get_segment(char *input_seg);
 
 //parse4.c
-void	get_seg_help(char *input_seg, int *curr_pos, char ***red);
-t_list	*get_segment(char *input_seg);
+int		get_heredoc(t_list *lst);
+int		get_heredoc_2(t_seg *seg);
 
 #endif

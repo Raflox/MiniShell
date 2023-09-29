@@ -6,7 +6,7 @@
 /*   By: rafilipe <rafilipe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 12:23:54 by rafilipe          #+#    #+#             */
-/*   Updated: 2023/09/29 12:57:27 by rafilipe         ###   ########.fr       */
+/*   Updated: 2023/09/29 12:59:09 by rafilipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,31 +96,31 @@ int	pipe_sintax(char *input)
 	return (0);
 }
 
-// char	*parse_red(char *seg, int *curr_pos)
-// {
-// 	char	*red;
-// 	char	*temp;
-// 	char	*final;
+char	*parse_red(char *seg, int *curr_pos)
+{
+	char	*red;
+	char	*temp;
+	char	*final;
 
-// 	red = NULL;
-// 	temp = NULL;
-// 	final = NULL;
-// 	add_c_to_string(&red, seg[(*curr_pos)++]);
-// 	if (seg[(*curr_pos) - 1] == seg[(*curr_pos)])
-// 		add_c_to_string(&red, seg[(*curr_pos)++]);
-// 	while (seg[(*curr_pos)] && is_space(seg[*curr_pos]))
-// 		(*curr_pos)++;
-// 	if (seg[(*curr_pos)] && !is_greatorless(seg[(*curr_pos)]))
-// 	{
-// 		temp = parse_word(seg, curr_pos, red);
-// 		if (temp)
-// 		{
-// 			final = ft_strjoin(red, temp);
-// 			free(temp);
-// 		}
-// 	}
-// 	else
-// 		display_error(1, "Syntax Error", true);
-// 	free(red);
-// 	return (final);
-// }
+	red = NULL;
+	temp = NULL;
+	final = NULL;
+	add_c_to_string(&red, seg[(*curr_pos)++]);
+	if (seg[(*curr_pos) - 1] == seg[(*curr_pos)])
+		add_c_to_string(&red, seg[(*curr_pos)++]);
+	while (seg[(*curr_pos)] && is_space(seg[*curr_pos]))
+		(*curr_pos)++;
+	if (seg[(*curr_pos)] && !is_greatorless(seg[(*curr_pos)]))
+	{
+		temp = parse_word(seg, curr_pos, red);
+		if (temp)
+		{
+			final = ft_strjoin(red, temp);
+			free(temp);
+		}
+	}
+	else
+		display_error(1, "Syntax Error", true);
+	free(red);
+	return (final);
+}
